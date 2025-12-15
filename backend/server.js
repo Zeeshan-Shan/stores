@@ -11,6 +11,7 @@ import { connectDb } from "./lib/db.js";
 import cookieParser from "cookie-parser";
 import fileUpload from "express-fileupload";
 import User from "./models/user.model.js";
+import contactRoutes from "./routes/contact.route.js"
 dotenv.config();
 const app=express();
 app.use(express.json({ limit: "50mb" }));
@@ -24,6 +25,7 @@ app.use("/api/auth",authRoute);
 app.use("/api/products", productRoutes);
 app.use("/api/cart", cartRoutes);
 app.use("/api/coupons", couponRoutes);
+app.use("/api/contact",contactRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/analytics", analyticsRoutes);
 import { fileURLToPath } from "url";

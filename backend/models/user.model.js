@@ -19,6 +19,14 @@ const userSchema = new mongoose.Schema(
 			required: [true, "Password is required"],
 			minlength: [6, "Password must be at least 6 characters long"],
 		},
+		avatar:{
+			type:String,
+			default:"avatar1.png"
+		},
+		mobile:{
+			type:String,
+			defualt:""
+		},
 		cartItems: [
 			{
 				quantity: {

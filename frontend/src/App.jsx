@@ -17,6 +17,8 @@ import { useCartStore } from "./stores/useCartStore";
 import PurchaseSuccessPage from "./pages/PurchaseSuccessPage";
 import PurchaseCancelPage from "./pages/PurchaseCancelPage";
 import CheckoutSuccess from "./pages/CheckoutSuccess";
+import ContactPage from './pages/ContactPage';
+import ProfilePage from './pages/ProfilePage';
 function App() {
 	const { user, checkAuth, checkingAuth } = useUserStore();
 	const { getCartItems } = useCartStore();
@@ -47,6 +49,7 @@ function App() {
 					<Route path='/' element={<HomePage />} />
 					<Route path='/signup' element={!user ? <SignUpPage /> : <Navigate to='/' />} />
 					<Route path='/login' element={!user ? <LoginPage /> : <Navigate to='/' />} />
+					
 					<Route
 						path='/secret-dashboard'
 						element={user?.role === "admin" ? <AdminPage /> : <Navigate to='/login' />}
@@ -54,10 +57,18 @@ function App() {
 					<Route path='/category/:category' element={<CategoryPage />} />
 					<Route path='/cart' element={user ? <CartPage /> : <Navigate to='/login' />} />
 					<Route
+							path='/profile'
+							element={user ? <ProfilePage /> : <Navigate to='/login' />}
+						/>
+					<Route
 						path='/purchase-success'
 						element={user ? <PurchaseSuccessPage /> : <Navigate to='/login' />}
 					/>
 					<Route path='/purchase-cancel' element={user ? <PurchaseCancelPage /> : <Navigate to='/login' />} />
+					<Route
+							path='/contact'
+							element={user ? <ContactPage /> : <Navigate to='/login' />}
+						/>
 					<Route path="/checkout-success" element={<CheckoutSuccess />} />
 				</Routes>
 			</div>

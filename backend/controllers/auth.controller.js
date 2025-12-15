@@ -2,6 +2,7 @@ import User from "../models/user.model.js";
 import jwt from "jsonwebtoken";
 import { redis } from "../lib/redis.js";
 import dotenv from "dotenv";
+
 dotenv.config();
 const generateTokens = (userId) => {
 	const accessToken = jwt.sign({ userId }, process.env.ACCESS_TOKEN_SECRET, {
@@ -48,6 +49,8 @@ export const signup=async (req,res)=>{
 			name: user.name,
 			email: user.email,
 			role: user.role,
+			avatar:user.avatar?? "avatar1.png",
+			mobile:user.mobile?? "",
 		});
 	} catch (error) {
 		console.log("Error in signup controller", error.message);
@@ -69,6 +72,8 @@ export const login = async (req, res) => {
 				name: user.name,
 				email: user.email,
 				role: user.role,
+				avatar:user.avatar?? "avatar1.png",
+			    mobile:user.mobile?? "",
 			});
 		} else {
 			res.status(400).json({ message: "Invalid email or password" });
@@ -126,9 +131,85 @@ export const refreshToken = async (req, res) => {
 };
 export const getProfile = async (req, res) => {
 	try {
-		res.json(req.user);
+		res.json({
+			_id: req.user._id,
+			name: req.user.name,
+			email: req.user.email,
+			role: req.user.role,
+			avatar: req.user.avatar ?? "avatar1.png",
+			mobile: req.user.mobile ?? "",
+		});
 	} catch (error) {
-		res.status(500).json({ message: "Server error", error: error.message });
+		res.status(500).json({ message: error.message });
+	}
+};
+
+
+// ========= UPDATE PROFILE =========
+export const updateProfile = async (req, res) => {
+	try {
+		const { name, email, mobile, avatar } = req.body;
+
+		const userId = req.user?._id || req.user?.id;
+		if (!userId) return res.status(401).json({ message: "Unauthorized - No user found" });
+
+		const user = await User.findById(userId);
+		if (!user) return res.status(404).json({ message: "User not found" });
+
+		user.name = name ?? user.name;
+		user.email = email ?? user.email;
+		user.mobile = mobile ?? user.mobile;
+		user.avatar = avatar ?? user.avatar;
+
+		await user.save();
+
+		return res.json({
+			_id: user._id,
+			name: user.name,
+			email: user.email,
+			role: user.role,
+			avatar: user.avatar ?? "avatar1.png",
+			mobile: user.mobile ?? "",
+		});
+	} catch (err) {
+		console.log("UPDATE ERROR:", err);
+		return res.status(500).json({ message: err.message });
+	}
+};
+
+export const updatePassword = async (req, res) => {
+	try {
+		const { currentPassword, newPassword, confirmPassword } = req.body;
+
+		if (!currentPassword || !newPassword || !confirmPassword) {
+			return res.status(400).json({ message: "All fields are required" });
+		}
+
+		// ⭐ Minimum password length check
+		if (newPassword.length < 6) {
+			return res.status(400).json({ message: "Password must be at least 6 characters long" });
+		}
+
+		if (newPassword !== confirmPassword) {
+			return res.status(400).json({ message: "New passwords do not match" });
+		}
+
+		const user = await User.findById(req.user._id);
+		if (!user) return res.status(404).json({ message: "User not found" });
+
+		const isMatch = await user.comparePassword(currentPassword);
+		if (!isMatch) {
+			return res.status(400).json({ message: "Current password is incorrect" });
+		}
+
+		user.password = newPassword;
+		await user.save();
+
+		return res.json({ message: "Password updated successfully" });
+
+	} catch (error) {
+		console.log("Error updating password:", error.message);
+		return res.status(500).json({ message: "Server error" });
 	}
 };
 
