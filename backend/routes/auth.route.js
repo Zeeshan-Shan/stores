@@ -25,6 +25,7 @@ import {
 	sendOTP,
 	resetPasswordWithOTP, 
 	ADMIN,
+	updateAddress,
 } from "../controllers/auth.controller.js";
 
 import { protectRoute } from "../middleware/auth.middleware.js";
@@ -35,7 +36,7 @@ router.post("/logout", logout);
 
 router.get("/profile", protectRoute, getProfile);
 router.put("/profile", protectRoute, updateProfile);
-
+router.put("/address", protectRoute, updateAddress);
 
 router.put("/change-password", protectRoute, updatePassword);
 

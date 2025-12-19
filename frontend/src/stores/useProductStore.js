@@ -4,6 +4,7 @@ import axios from "../lib/axios";
 export const useProductStore = create((set) => ({
 	products: [],
 	loading: false,
+	selectedProduct: null,
 	setProducts: (products) => set({ products }),
 	createProduct: async (productData) => {
 		set({ loading: true });
@@ -38,6 +39,16 @@ export const useProductStore = create((set) => ({
 			toast.error(error.response.data.error || "Failed to fetch products");
 		}
 	},
+	fetchProductById: async (id) => {
+		set({ loading: true });
+		try {
+			const res = await axios.get(`/products/${id}`);
+			set({ selectedProduct: res.data, loading: false });
+		} catch (error) {
+			set({ loading: false });
+			toast.error("Failed to fetch product details");
+		}
+	},
 	deleteProduct: async (productId) => {
 		set({ loading: true });
 		try {
@@ -55,7 +66,6 @@ export const useProductStore = create((set) => ({
 		set({ loading: true });
 		try {
 			const response = await axios.patch(`/products/${productId}`);
-			// this will update the isFeatured prop of the product
 			set((prevProducts) => ({
 				products: prevProducts.products.map((product) =>
 					product._id === productId ? { ...product, isFeatured: response.data.isFeatured } : product

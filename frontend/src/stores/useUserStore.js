@@ -115,7 +115,7 @@ export const useUserStore = create((set, get) => ({
 	loading: false,
 	checkingAuth: true,
 
-	// <<<<<< ADD THIS >>>>>>
+	
 	setUser: (updatedUser) => set({ user: updatedUser }),
 
 	signup: async ({ name, email, password, confirmPassword }) => {
@@ -137,6 +137,7 @@ export const useUserStore = create((set, get) => ({
 					role: res.data.role,
 					avatar: res.data.avatar ?? "/avatars/avatar1.png",
 					mobile: res.data.mobile ?? "",
+					address: res.data.address ?? null,
 				},
 				loading: false,
 			});
@@ -160,6 +161,7 @@ export const useUserStore = create((set, get) => ({
 					role: res.data.role,
 					avatar: res.data.avatar ?? "/avatars/avatar1.png",
 					mobile: res.data.mobile ?? "",
+					address: res.data.address ?? null,
 				},
 				loading: false,
 			});
@@ -192,6 +194,7 @@ export const useUserStore = create((set, get) => ({
 					role: response.data.role,
 					avatar: response.data.avatar ?? "/avatars/avatar1.png",
 					mobile: response.data.mobile ?? "",
+					address: response.data.address ?? null,
 				},
 				checkingAuth: false,
 			});

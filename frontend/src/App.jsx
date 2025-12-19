@@ -22,6 +22,7 @@ import { Toaster } from "react-hot-toast";
 
 import { useUserStore } from "./stores/useUserStore";
 import { useCartStore } from "./stores/useCartStore";
+import ProductDetailPage from "./pages/ProductDetailPage";
 
 function App() {
 	const { user, checkAuth, checkingAuth } = useUserStore();
@@ -87,7 +88,7 @@ function App() {
 					/>
 
 					<Route path='/category/:category' element={<CategoryPage />} />
-
+						<Route path="/product/:id" element={<ProductDetailPage />} />
 					<Route
 						path='/cart'
 						element={user ? <CartPage /> : <Navigate to='/login' />}

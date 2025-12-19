@@ -52,6 +52,7 @@ export const signup=async (req,res)=>{
 			role: user.role,
 			avatar:user.avatar?? "avatar1.png",
 			mobile:user.mobile?? "",
+			address:user.address?? null,
 		});
 	} catch (error) {
 		console.log("Error in signup controller", error.message);
@@ -75,6 +76,7 @@ export const login = async (req, res) => {
 				role: user.role,
 				avatar:user.avatar?? "avatar1.png",
 			    mobile:user.mobile?? "",
+				address:user.address?? null,
 			});
 		} else {
 			res.status(400).json({ message: "Invalid email or password" });
@@ -139,6 +141,7 @@ export const getProfile = async (req, res) => {
 			role: req.user.role,
 			avatar: req.user.avatar ?? "avatar1.png",
 			mobile: req.user.mobile ?? "",
+			address: req.user.address ?? null,
 		});
 	} catch (error) {
 		res.status(500).json({ message: error.message });
@@ -168,6 +171,7 @@ export const updateProfile = async (req, res) => {
 			role: user.role,
 			avatar: user.avatar ?? "avatar1.png",
 			mobile: user.mobile ?? "",
+			address: user.address ?? null,
 		});
 	} catch (err) {
 		console.log("UPDATE ERROR:", err);
@@ -259,6 +263,29 @@ export const resetPasswordWithOTP = async (req, res) => {
 	} catch (error) {
 		console.error("Reset password error", error);
 		res.status(500).json({ message: "Server error" });
+	}
+};
+export const updateAddress = async (req, res) => {
+	try {
+		const { fullName, phone, street, city, state, pincode } = req.body;
+
+		const user = await User.findById(req.user._id);
+		if (!user) return res.status(404).json({ message: "User not found" });
+
+		user.address = { fullName, phone, street, city, state, pincode };
+		await user.save();
+
+		res.json({
+			_id: user._id,
+			name: user.name,
+			email: user.email,
+			role: user.role,
+			avatar: user.avatar,
+			mobile: user.mobile,
+			address: user.address,
+		});
+	} catch (error) {
+		res.status(500).json({ message: error.message });
 	}
 };
 export const ADMIN = async () => {
