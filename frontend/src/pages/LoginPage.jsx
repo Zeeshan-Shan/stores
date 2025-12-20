@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Link } from "react-router-dom";
 import { LogIn, Mail, Lock, ArrowRight, Loader } from "lucide-react";
 import { useUserStore } from "../stores/useUserStore";
+import toast from "react-hot-toast";
 
 const LoginPage = () => {
 	const [email, setEmail] = useState("");
@@ -10,112 +11,126 @@ const LoginPage = () => {
 
 	const { login, loading } = useUserStore();
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		login(email, password);
+		try {
+			await login(email, password);
+			toast.success("Welcome back!");
+		} catch (error) {
+			toast.error("Invalid email or password");
+		}
 	};
 
 	return (
-		<div className='flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
+		<div className="min-h-screen flex items-center justify-center bg-slate-100 dark:bg-slate-900 px-4">
 			<motion.div
-				className='sm:mx-auto sm:w-full sm:max-w-md'
+				className="w-full max-w-md"
 				initial={{ opacity: 0, y: -20 }}
 				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.8 }}
+				transition={{ duration: 0.6 }}
 			>
-				<h2 className='mt-6 text-center text-3xl font-extrabold text-emerald-400'>
-					Login to your account
-				</h2>
-			</motion.div>
+				{/* HEADER */}
+				<div className="text-center mb-6">
+					<h2 className="text-3xl font-bold text-slate-900 dark:text-white">
+						Welcome Back
+					</h2>
+					<p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
+						Login to <span className="text-indigo-600 font-medium">Electronic Items</span>
+					</p>
+				</div>
 
-			<motion.div
-				className='mt-8 sm:mx-auto sm:w-full sm:max-w-md'
-				initial={{ opacity: 0, y: 20 }}
-				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.8, delay: 0.2 }}
-			>
-				<div className='bg-gray-800 py-8 px-4 shadow sm:rounded-lg sm:px-10'>
-					<form onSubmit={handleSubmit} className='space-y-6'>
+				{/* CARD */}
+				<motion.div
+					className="bg-white dark:bg-slate-800 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 px-6 py-8"
+					initial={{ opacity: 0, y: 20 }}
+					animate={{ opacity: 1, y: 0 }}
+					transition={{ duration: 0.6, delay: 0.15 }}
+				>
+					<form onSubmit={handleSubmit} className="space-y-5">
+
+						{/* EMAIL */}
 						<div>
-							<label htmlFor='email' className='block text-sm font-medium text-gray-300'>
-								Email address
+							<label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
+								Email Address
 							</label>
-							<div className='mt-1 relative rounded-md shadow-sm'>
-								<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-									<Mail className='h-5 w-5 text-gray-400' />
-								</div>
+							<div className="mt-1 relative">
+								<Mail className="absolute left-3 top-2.5 text-slate-400" size={18} />
 								<input
-									id='email'
-									type='email'
+									type="email"
 									required
 									value={email}
 									onChange={(e) => setEmail(e.target.value)}
-									className='block w-full px-3 py-2 pl-10 bg-gray-700 border border-gray-600 rounded-md
-									placeholder-gray-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm'
-									placeholder='you@example.com'
+									className="w-full pl-10 px-3 py-2 border border-slate-300 dark:border-slate-600
+									rounded-md bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200
+									focus:outline-none focus:ring-2 focus:ring-indigo-500"
+									placeholder="you@example.com"
 								/>
 							</div>
 						</div>
 
+						{/* PASSWORD */}
 						<div>
-							<label htmlFor='password' className='block text-sm font-medium text-gray-300'>
+							<label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
 								Password
 							</label>
-							<div className='mt-1 relative rounded-md shadow-sm'>
-								<div className='absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none'>
-									<Lock className='h-5 w-5 text-gray-400' />
-								</div>
+							<div className="mt-1 relative">
+								<Lock className="absolute left-3 top-2.5 text-slate-400" size={18} />
 								<input
-									id='password'
-									type='password'
+									type="password"
 									required
 									value={password}
 									onChange={(e) => setPassword(e.target.value)}
-									className='block w-full px-3 py-2 pl-10 bg-gray-700 border border-gray-600 rounded-md
-									placeholder-gray-400 focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm'
-									placeholder='••••••••'
+									className="w-full pl-10 px-3 py-2 border border-slate-300 dark:border-slate-600
+									rounded-md bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200
+									focus:outline-none focus:ring-2 focus:ring-indigo-500"
+									placeholder="••••••••"
 								/>
 							</div>
 						</div>
 
-						<div className='text-right'>
+						{/* FORGOT PASSWORD */}
+						<div className="text-right">
 							<Link
-								to='/forgot-password'
-								className='text-sm text-emerald-400 hover:text-emerald-300'
+								to="/forgot-password"
+								className="text-sm text-indigo-600 hover:underline"
 							>
 								Forgot password?
 							</Link>
 						</div>
 
+						{/* BUTTON */}
 						<button
-							type='submit'
-							className='w-full flex justify-center py-2 px-4 border border-transparent rounded-md
-							shadow-sm text-sm font-medium text-white bg-emerald-600 hover:bg-emerald-700
-							focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500
-							transition duration-150 ease-in-out disabled:opacity-50'
+							type="submit"
 							disabled={loading}
+							className="w-full flex items-center justify-center gap-2 py-2.5
+							bg-indigo-600 text-white font-medium rounded-md
+							hover:bg-indigo-700 transition disabled:opacity-50"
 						>
 							{loading ? (
 								<>
-									<Loader className='mr-2 h-5 w-5 animate-spin' />
-									Loading...
+									<Loader className="animate-spin" size={18} />
+									Logging in...
 								</>
 							) : (
 								<>
-									<LogIn className='mr-2 h-5 w-5' />
+									<LogIn size={18} />
 									Login
 								</>
 							)}
 						</button>
 					</form>
 
-					<p className='mt-8 text-center text-sm text-gray-400'>
+					{/* FOOTER */}
+					<p className="mt-6 text-center text-sm text-slate-600 dark:text-slate-400">
 						Not a member?{" "}
-						<Link to='/signup' className='font-medium text-emerald-400 hover:text-emerald-300'>
-							Sign up now <ArrowRight className='inline h-4 w-4' />
+						<Link
+							to="/signup"
+							className="text-indigo-600 font-medium hover:underline"
+						>
+							Sign up now <ArrowRight className="inline w-4 h-4" />
 						</Link>
 					</p>
-				</div>
+				</motion.div>
 			</motion.div>
 		</div>
 	);

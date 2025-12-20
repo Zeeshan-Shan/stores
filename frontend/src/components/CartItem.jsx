@@ -1,61 +1,101 @@
-import React from 'react';
+import React from "react";
 import { Minus, Plus, Trash } from "lucide-react";
+import { motion } from "framer-motion";
 import { useCartStore } from "../stores/useCartStore";
+
 const CartItem = ({ item }) => {
 	const { removeFromCart, updateQuantity } = useCartStore();
 
 	return (
-		<div className='rounded-lg border p-4 shadow-sm border-gray-700 bg-gray-800 md:p-6'>
-			<div className='space-y-4 md:flex md:items-center md:justify-between md:gap-6 md:space-y-0'>
-				<div className='shrink-0 md:order-1'>
-					<img className='h-20 md:h-32 rounded object-cover' src={item.image} />
+		<motion.div
+			initial={{ opacity: 0, y: 10 }}
+			animate={{ opacity: 1, y: 0 }}
+			transition={{ duration: 0.3 }}
+			className="
+				group rounded-2xl border border-slate-700
+				bg-slate-900/80 backdrop-blur-md
+				p-4 md:p-6 shadow-md hover:shadow-xl
+				transition
+			"
+		>
+			<div className="flex flex-col md:flex-row gap-6">
+
+				<div className="shrink-0">
+					<img
+						src={item.image}
+						alt={item.name}
+						className="
+							h-24 w-24 md:h-32 md:w-32
+							rounded-xl object-cover
+							border border-slate-700
+							group-hover:scale-105 transition
+						"
+					/>
 				</div>
-				<label className='sr-only'>Choose quantity:</label>
-
-				<div className='flex items-center justify-between md:order-3 md:justify-end'>
-					<div className='flex items-center gap-2'>
-						<button
-							className='inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
-							 border-gray-600 bg-gray-700 hover:bg-gray-600 focus:outline-none focus:ring-2
-							  focus:ring-emerald-500'
-							onClick={() => updateQuantity(item._id, item.quantity - 1)}
-						>
-							<Minus className='text-gray-300' />
-						</button>
-						<p>{item.quantity}</p>
-						<button
-							className='inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-md border
-							 border-gray-600 bg-gray-700 hover:bg-gray-600 focus:outline-none 
-						focus:ring-2 focus:ring-emerald-500'
-							onClick={() => updateQuantity(item._id, item.quantity + 1)}
-						>
-							<Plus className='text-gray-300' />
-						</button>
-					</div>
-
-					<div className='text-end md:order-4 md:w-32'>
-						<p className='text-base font-bold text-emerald-400'>₹{item.price}</p>
-					</div>
-				</div>
-
-				<div className='w-full min-w-0 flex-1 space-y-4 md:order-2 md:max-w-md'>
-					<p className='text-base font-medium text-white hover:text-emerald-400 hover:underline'>
+				<div className="flex-1 space-y-2">
+					<h3 className="text-lg font-semibold text-white group-hover:text-emerald-400 transition">
 						{item.name}
-					</p>
-					<p className='text-sm text-gray-400'>{item.description}</p>
+					</h3>
 
-					<div className='flex items-center gap-4'>
+					<p className="text-sm text-slate-400 line-clamp-2">
+						{item.description}
+					</p>
+
+					{/* PRICE */}
+					<p className="text-lg font-bold text-emerald-400">
+						₹{item.price}
+					</p>
+				</div>
+
+				<div className="flex md:flex-col items-center justify-between gap-4">
+
+					<div className="flex items-center gap-2 bg-slate-800 rounded-xl px-3 py-1 border border-slate-700">
 						<button
-							className='inline-flex items-center text-sm font-medium text-red-400
-							 hover:text-red-300 hover:underline'
-							onClick={() => removeFromCart(item._id)}
+							onClick={() =>
+								updateQuantity(item._id, item.quantity - 1)
+							}
+							className="
+								h-8 w-8 flex items-center justify-center
+								rounded-lg bg-slate-700 hover:bg-slate-600
+								text-white transition
+							"
 						>
-							<Trash />
+							<Minus size={14} />
+						</button>
+
+						<span className="min-w-6 text-center font-medium text-white">
+							{item.quantity}
+						</span>
+
+						<button
+							onClick={() =>
+								updateQuantity(item._id, item.quantity + 1)
+							}
+							className="
+								h-8 w-8 flex items-center justify-center
+								rounded-lg bg-slate-700 hover:bg-slate-600
+								text-white transition
+							"
+						>
+							<Plus size={14} />
 						</button>
 					</div>
+
+					<button
+						onClick={() => removeFromCart(item._id)}
+						className="
+							flex items-center gap-1 text-sm
+							text-red-400 hover:text-red-300
+							hover:underline transition
+						"
+					>
+						<Trash size={16} />
+						Remove
+					</button>
 				</div>
 			</div>
-		</div>
+		</motion.div>
 	);
 };
+
 export default CartItem;

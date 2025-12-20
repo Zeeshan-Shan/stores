@@ -95,6 +95,20 @@ const ContactPage = () => {
             className="w-full px-3 py-2 h-32 rounded-md bg-gray-800 text-gray-100 border border-gray-700 outline-none focus:border-emerald-500 resize-none"
             required
           ></textarea>
+          <div className="mt-6 text-center bg-gray-900 bg-opacity-60 border border-emerald-700 rounded-xl p-4">
+          <h2 className="text-xl font-semibold text-emerald-400 mb-3">
+            Contact Us
+          </h2>
+
+          <div className="space-y-2 text-gray-300">
+            <p className="flex justify-center items-center gap-2">
+              📞 <span className="font-medium">+91 98765 43210</span>
+            </p>
+            <p className="flex justify-center items-center gap-2">
+              📧 <span className="font-medium">admin@gmail.com</span>
+            </p>
+          </div>
+        </div>
         </div>
         <motion.button
           whileTap={{ scale: 0.95 }}

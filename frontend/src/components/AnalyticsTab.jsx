@@ -1,9 +1,33 @@
-import React from 'react';
-import { motion } from "framer-motion";
+import { motion, useMotionValue, useTransform, animate } from "framer-motion";
 import { useEffect, useState } from "react";
 import axios from "../lib/axios";
 import { Users, Package, ShoppingCart, DollarSign } from "lucide-react";
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import {
+	LineChart,
+	Line,
+	XAxis,
+	YAxis,
+	CartesianGrid,
+	Tooltip,
+	Legend,
+	ResponsiveContainer,
+} from "recharts";
+
+const AnimatedCounter = ({ value }) => {
+	const count = useMotionValue(0);
+	const rounded = useTransform(count, Math.round);
+
+	useEffect(() => {
+		const controls = animate(count, value, { duration: 1.5 });
+		return controls.stop;
+	}, [value]);
+
+	return (
+		<motion.span className="text-3xl font-bold">
+			{rounded}
+		</motion.span>
+	);
+};
 
 const AnalyticsTab = () => {
 	const [analyticsData, setAnalyticsData] = useState({
@@ -18,80 +42,80 @@ const AnalyticsTab = () => {
 	useEffect(() => {
 		const fetchAnalyticsData = async () => {
 			try {
-				const response = await axios.get("/analytics");
-				setAnalyticsData(response.data.analyticsData);
-				setDailySalesData(response.data.dailySalesData);
-			} catch (error) {
-				console.error("Error fetching analytics data:", error);
+				const res = await axios.get("/analytics");
+				setAnalyticsData(res.data.analyticsData);
+				setDailySalesData(res.data.dailySalesData);
+			} catch (err) {
+				console.error(err);
 			} finally {
 				setIsLoading(false);
 			}
 		};
-
 		fetchAnalyticsData();
 	}, []);
 
 	if (isLoading) {
-		return <div>Loading...</div>;
+		return (
+			<p className="text-center text-slate-400">Loading analytics…</p>
+		);
 	}
 
 	return (
-		<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-			<div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8'>
+		<div className="max-w-7xl mx-auto px-4">
+			{/* STATS */}
+			<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
 				<AnalyticsCard
-					title='Total Users'
-					value={analyticsData.users.toLocaleString()}
+					title="Total Users"
+					value={analyticsData.users}
 					icon={Users}
-					color='from-emerald-500 to-teal-700'
+					color="from-indigo-500 to-violet-600"
 				/>
 				<AnalyticsCard
-					title='Total Products'
-					value={analyticsData.products.toLocaleString()}
+					title="Products"
+					value={analyticsData.products}
 					icon={Package}
-					color='from-emerald-500 to-green-700'
+					color="from-emerald-500 to-teal-600"
 				/>
 				<AnalyticsCard
-					title='Total Sales'
-					value={analyticsData.totalSales.toLocaleString()}
+					title="Total Sales"
+					value={analyticsData.totalSales}
 					icon={ShoppingCart}
-					color='from-emerald-500 to-cyan-700'
+					color="from-cyan-500 to-blue-600"
 				/>
 				<AnalyticsCard
-					title='Total Revenue'
-					value={`₹${analyticsData.totalRevenue.toLocaleString()}`}
+					title="Revenue (₹)"
+					value={analyticsData.totalRevenue}
 					icon={DollarSign}
-					color='from-emerald-500 to-lime-700'
+					color="from-orange-500 to-amber-600"
 				/>
 			</div>
+
+			{/* CHART */}
 			<motion.div
-				className='bg-gray-800/60 rounded-lg p-6 shadow-lg'
+				className="bg-white dark:bg-slate-800
+				border border-slate-200 dark:border-slate-700
+				rounded-xl p-6 shadow-lg"
 				initial={{ opacity: 0, y: 20 }}
 				animate={{ opacity: 1, y: 0 }}
-				transition={{ duration: 0.5, delay: 0.25 }}
 			>
-				<ResponsiveContainer width='100%' height={400}>
+				<ResponsiveContainer width="100%" height={380}>
 					<LineChart data={dailySalesData}>
-						<CartesianGrid strokeDasharray='3 3' />
-						<XAxis dataKey='name' stroke='#D1D5DB' />
-						<YAxis yAxisId='left' stroke='#D1D5DB' />
-						<YAxis yAxisId='right' orientation='right' stroke='#D1D5DB' />
+						<CartesianGrid strokeDasharray="3 3" />
+						<XAxis dataKey="name" />
+						<YAxis />
 						<Tooltip />
 						<Legend />
 						<Line
-							yAxisId='left'
-							type='monotone'
-							dataKey='sales'
-							stroke='#10B981'
-							activeDot={{ r: 8 }}
-							name='Sales'
+							type="monotone"
+							dataKey="sales"
+							stroke="#6366F1"
+							strokeWidth={3}
 						/>
 						<Line
-							yAxisId='right'
-							type='monotone'
-							dataKey='revenue'
-							stroke='#3B82F6'
-							activeDot={{ r: 8 }}
-							name='Revenue'
+							type="monotone"
+							dataKey="revenue"
+							stroke="#10B981"
+							strokeWidth={3}
 						/>
 					</LineChart>
 				</ResponsiveContainer>
@@ -99,24 +123,23 @@ const AnalyticsTab = () => {
 		</div>
 	);
 };
+
 export default AnalyticsTab;
+
 
 const AnalyticsCard = ({ title, value, icon: Icon, color }) => (
 	<motion.div
-		className={`bg-gray-800 rounded-lg p-6 shadow-lg overflow-hidden relative ${color}`}
+		className={`relative rounded-xl p-6 text-white shadow-lg
+		bg-linear-to-br ${color}`}
 		initial={{ opacity: 0, y: 20 }}
 		animate={{ opacity: 1, y: 0 }}
-		transition={{ duration: 0.5 }}
 	>
-		<div className='flex justify-between items-center'>
-			<div className='z-10'>
-				<p className='text-emerald-300 text-sm mb-1 font-semibold'>{title}</p>
-				<h3 className='text-white text-3xl font-bold'>{value}</h3>
+		<div className="flex justify-between items-center">
+			<div>
+				<p className="text-sm opacity-80">{title}</p>
+				<AnimatedCounter value={value} />
 			</div>
-		</div>
-		<div className='absolute inset-0 bg-linear-to-br from-emerald-600 to-emerald-900 opacity-30' />
-		<div className='absolute -bottom-4 -right-4 text-emerald-800 opacity-50'>
-			<Icon className='h-32 w-32' />
+			<Icon size={48} className="opacity-30" />
 		</div>
 	</motion.div>
 );

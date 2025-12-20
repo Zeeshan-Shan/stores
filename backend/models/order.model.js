@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+
 const orderSchema = new mongoose.Schema(
   {
     user: {
@@ -6,6 +7,7 @@ const orderSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+
     products: [
       {
         product: {
@@ -13,36 +15,46 @@ const orderSchema = new mongoose.Schema(
           ref: "Product",
           required: true,
         },
-        quantity: {
-          type: Number,
-          required: true,
-          min: 1,
-        },
-        price: {
-          type: Number,
-          required: true,
-          min: 0,
-        },
+        quantity: { type: Number, required: true },
+        price: { type: Number, required: true },
       },
     ],
-    totalAmount: {
-      type: Number,
-      required: true,
-      min: 0,
-    },
-    razorpayOrderId: {
+
+    totalAmount: { type: Number, required: true },
+
+    paymentStatus: {
       type: String,
-      required: true,
-      unique: true,
+      enum: ["PENDING", "PAID", "FAILED", "REFUNDED"],
+      default: "PENDING",
     },
-    razorpayPaymentId: {
+
+    orderStatus: {
       type: String,
-      required: true,
-      unique: true,
+      enum: [
+        "PLACED",
+        "CONFIRMED",
+        "PACKED",
+        "SHIPPED",
+        "OUT_FOR_DELIVERY",
+        "DELIVERED",
+        "CANCELLED",
+      ],
+      default: "PLACED",
     },
-	
+
+    refundStatus: {
+      type: String,
+      enum: ["NONE", "REQUESTED", "REFUNDED"],
+      default: "NONE",
+    },
+
+    razorpayOrderId: String,
+    razorpayPaymentId: String,
+
+    discountApplied: { type: Number, default: 0 },
   },
   { timestamps: true }
 );
-const Order = mongoose.model("Order", orderSchema);
-export default Order;
+
+export default mongoose.model("Order", orderSchema);
+

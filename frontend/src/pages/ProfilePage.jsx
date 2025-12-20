@@ -3,31 +3,91 @@ import { useUserStore } from "../stores/useUserStore";
 import axios from "../lib/axios";
 import { toast } from "react-hot-toast";
 import { Link } from "react-router-dom";
-import { MessageCircle, Lock } from "lucide-react";
+import {
+  Lock,
+  User,
+  MapPin,
+  LogOut,
+  Package
+} from "lucide-react";
 
-const avatarOptions = ["avatar1.png","avatar2.png","avatar3.png","avatar4.png","avatar5.png"];
+const avatarOptions = [
+  "avatar1.png",
+  "avatar2.png",
+  "avatar3.png",
+  "avatar4.png",
+  "avatar5.png",
+];
 
 const Field = ({ label, ...props }) => (
   <div className="space-y-1">
-    <label className="text-sm text-gray-400">{label}</label>
+    <label className="text-sm font-medium text-slate-600 dark:text-slate-300">
+      {label}
+    </label>
     <input
       {...props}
-      className="w-full px-3 py-2 rounded-md bg-gray-800 border border-gray-700 text-white focus:border-emerald-500 outline-none"
+      className="
+        w-full px-3 py-2 rounded-md
+        bg-white dark:bg-slate-900
+        border border-slate-300 dark:border-slate-600
+        text-slate-800 dark:text-slate-200
+        focus:ring-2 focus:ring-indigo-500
+        outline-none
+      "
     />
   </div>
 );
+
+const SidebarItem = ({ active, icon: Icon, label, onClick, danger }) => (
+  <button
+    onClick={onClick}
+    className={`
+      w-full flex items-center gap-3 px-4 py-3 rounded-md text-sm
+      ${active ? "bg-slate-100 dark:bg-slate-700 font-semibold" : "hover:bg-slate-100 dark:hover:bg-slate-700"}
+      ${danger ? "text-red-600 hover:bg-red-50" : ""}
+    `}
+  >
+    <Icon size={16} />
+    {label}
+  </button>
+);
+
 const ProfilePage = () => {
   const user = useUserStore((s) => s.user);
   const setUser = useUserStore((s) => s.setUser);
 
-  const [profileForm, setProfileForm] = useState({ name:"", email:"", mobile:"", avatar:avatarOptions[0] });
-  const [addressForm, setAddressForm] = useState({ fullName:"", phone:"", street:"", city:"", state:"", pincode:"" });
-  const [passwordForm, setPasswordForm] = useState({ currentPassword:"", newPassword:"", confirmPassword:"" });
-  const [showPasswordModal, setShowPasswordModal] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile");
+
+  const [profileForm, setProfileForm] = useState({
+    name: "",
+    email: "",
+    mobile: "",
+    avatar: avatarOptions[0],
+  });
+
+  const [addressForm, setAddressForm] = useState({
+    fullName: "",
+    phone: "",
+    street: "",
+    city: "",
+    state: "",
+    pincode: "",
+  });
+
+  const [passwordForm, setPasswordForm] = useState({
+    currentPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
 
   useEffect(() => {
     if (user) {
-      setProfileForm({ name:user.name||"", email:user.email||"", mobile:user.mobile||"", avatar:user.avatar||avatarOptions[0] });
+      setProfileForm({
+        name: user.name,
+        email: user.email,
+        mobile: user.mobile || "",
+        avatar: user.avatar || avatarOptions[0],
+      });
       if (user.address) setAddressForm(user.address);
     }
   }, [user]);
@@ -43,7 +103,7 @@ const ProfilePage = () => {
     e.preventDefault();
     const res = await axios.put("/auth/address", addressForm);
     setUser(res.data);
-    toast.success("Address saved");
+    toast.success("Address updated");
   };
 
   const updatePassword = async () => {
@@ -52,96 +112,166 @@ const ProfilePage = () => {
 
     await axios.put("/auth/change-password", passwordForm);
     toast.success("Password updated");
-    setShowPasswordModal(false);
   };
+  const handleLogout=()=>{
+	useUserStore.getState().logout();
+	toast.success("Logged out successfully");
+	Navigate("/login");
+  }
 
-  if (!user) return <p className="mt-24 text-center text-gray-400">Please login</p>;
+  if (!user) return null;
 
   return (
-    <>
-      <div className="mt-24 max-w-3xl mx-auto px-4 space-y-12">
+    <div className="min-h-screen bg-slate-100 dark:bg-slate-900 pt-28 pb-16">
+      <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-6">
 
-        {/* PROFILE CARD */}
-        <div className="bg-gray-900 border border-emerald-700 rounded-xl p-6 space-y-6">
-          <h2 className="text-lg font-semibold text-emerald-400">Profile Details</h2>
-
-        {/* BIG AVATAR PREVIEW */}
-<div className="flex justify-center">
-  <img
-    src={profileForm.avatar}
-    alt="Selected Avatar"
-    className="w-28 h-28 rounded-full border-4 border-emerald-500 shadow-lg object-cover"
-  />
-</div>
-
-          <div className="flex justify-center gap-4">
-            {avatarOptions.map((a) => (
-              <img
-                key={a}
-                src={a}
-                onClick={() => setProfileForm({ ...profileForm, avatar: a })}
-                className={`w-14 h-14 rounded-full cursor-pointer border-2 ${profileForm.avatar===a?"border-emerald-500":"border-gray-700"}`}
-              />
-            ))}
-          </div>
-
-          <form onSubmit={updateProfile} className="grid md:grid-cols-2 gap-5">
-            <Field label="Full Name" name="name" value={profileForm.name} onChange={(e)=>setProfileForm({...profileForm,name:e.target.value})}/>
-            <Field label="Email Address" name="email" value={profileForm.email} onChange={(e)=>setProfileForm({...profileForm,email:e.target.value})}/>
-            <Field label="Mobile Number" name="mobile" value={profileForm.mobile} onChange={(e)=>setProfileForm({...profileForm,mobile:e.target.value})}/>
-            
-            <div
-              onClick={() => setShowPasswordModal(true)}
-              className="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-md cursor-pointer border border-gray-700 hover:border-emerald-500 md:col-span-2"
-            >
-              <Lock size={16}/> Change Password
+        {/* LEFT SIDEBAR */}
+        <aside className="md:col-span-1 bg-white dark:bg-slate-800 border rounded-lg p-4 h-fit sticky top-28">
+          <div className="flex items-center gap-3 pb-4 border-b mb-4">
+            <img src={profileForm.avatar} className="w-14 h-14 rounded-full border" />
+            <div>
+              <p className="text-xs text-slate-500">Hello</p>
+              <p className="font-semibold">{user.name}</p>
             </div>
-
-            <button className="md:col-span-2 bg-emerald-600 py-2 rounded-md text-white">
-              Save Profile
-            </button>
-          </form>
-        </div>
-
-        {/* ADDRESS CARD */}
-        <div className="bg-gray-900 border border-emerald-700 rounded-xl p-6 space-y-6">
-          <h2 className="text-lg font-semibold text-emerald-400">Delivery Address</h2>
-
-          <form onSubmit={updateAddress} className="grid md:grid-cols-2 gap-5">
-            <Field label="Receiver Name" name="fullName" value={addressForm.fullName} onChange={(e)=>setAddressForm({...addressForm,fullName:e.target.value})}/>
-            <Field label="Phone Number" name="phone" value={addressForm.phone} onChange={(e)=>setAddressForm({...addressForm,phone:e.target.value})}/>
-            <Field label="House / Street" name="street" value={addressForm.street} onChange={(e)=>setAddressForm({...addressForm,street:e.target.value})} className="md:col-span-2"/>
-            <Field label="City" name="city" value={addressForm.city} onChange={(e)=>setAddressForm({...addressForm,city:e.target.value})}/>
-            <Field label="State" name="state" value={addressForm.state} onChange={(e)=>setAddressForm({...addressForm,state:e.target.value})}/>
-            <Field label="Pincode" name="pincode" value={addressForm.pincode} onChange={(e)=>setAddressForm({...addressForm,pincode:e.target.value})}/>
-
-            <button className="md:col-span-2 bg-emerald-600 py-2 rounded-md text-white">
-              Save Address
-            </button>
-          </form>
-        </div>
-      </div>
-
-     
-      {showPasswordModal && (
-        <div className="fixed inset-0 bg-black/60 flex items-center justify-center">
-          <div className="bg-gray-900 p-6 rounded-xl w-80 space-y-4 relative">
-            <button onClick={()=>setShowPasswordModal(false)} className="absolute top-2 right-2 text-gray-400">✕</button>
-            <Field label="Current Password" type="password" onChange={(e)=>setPasswordForm({...passwordForm,currentPassword:e.target.value})}/>
-            <Field label="New Password" type="password" onChange={(e)=>setPasswordForm({...passwordForm,newPassword:e.target.value})}/>
-            <Field label="Confirm Password" type="password" onChange={(e)=>setPasswordForm({...passwordForm,confirmPassword:e.target.value})}/>
-            <button onClick={updatePassword} className="bg-emerald-600 py-2 rounded-md text-white w-full">
-              Update Password
-            </button>
           </div>
-        </div>
-      )}
 
-      <Link to="/contact" className="fixed bottom-6 right-6 bg-emerald-600 p-4 rounded-full text-white">
-        <MessageCircle />
-      </Link>
-    </>
+          <div className="space-y-1">
+            <SidebarItem
+              label="My Profile"
+              icon={User}
+              active={activeTab === "profile"}
+              onClick={() => setActiveTab("profile")}
+            />
+
+            <Link to="/my-orders">
+              <SidebarItem label="My Orders" icon={Package} />
+            </Link>
+
+            <SidebarItem
+              label="Addresses"
+              icon={MapPin}
+              active={activeTab === "address"}
+              onClick={() => setActiveTab("address")}
+            />
+
+            <SidebarItem
+              label="Change Password"
+              icon={Lock}
+              active={activeTab === "password"}
+              onClick={() => setActiveTab("password")}
+            />
+
+            <SidebarItem
+              label="Logout"
+              icon={LogOut}
+              onClick={handleLogout}
+              danger
+            />
+          </div>
+        </aside>
+
+        {/* RIGHT CONTENT */}
+        <main className="md:col-span-3 bg-white dark:bg-slate-800 border rounded-lg p-6">
+
+          {activeTab === "profile" && (
+            <form onSubmit={updateProfile} className="space-y-6">
+              <h2 className="text-lg font-semibold border-b pb-3">
+                Personal Information
+              </h2>
+
+              <div className="flex gap-3">
+                {avatarOptions.map((a) => (
+                  <img
+                    key={a}
+                    src={a}
+                    onClick={() => setProfileForm({ ...profileForm, avatar: a })}
+                    className={`w-16 h-16 rounded-full cursor-pointer border-2 ${
+                      profileForm.avatar === a
+                        ? "border-indigo-500"
+                        : "border-slate-300"
+                    }`}
+                  />
+                ))}
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <Field
+                  label="Full Name"
+                  value={profileForm.name}
+                  onChange={(e) =>
+                    setProfileForm({ ...profileForm, name: e.target.value })
+                  }
+                />
+                <Field label="Email Address" value={profileForm.email} disabled />
+                <Field
+                  label="Mobile Number"
+                  value={profileForm.mobile}
+                  onChange={(e) =>
+                    setProfileForm({ ...profileForm, mobile: e.target.value })
+                  }
+                />
+              </div>
+
+              <button className="bg-indigo-600 text-white px-6 py-2 rounded-md">
+                Save Changes
+              </button>
+            </form>
+          )}
+
+          {activeTab === "address" && (
+            <form onSubmit={updateAddress} className="space-y-5">
+              <h2 className="text-lg font-semibold border-b pb-3">
+                Delivery Address
+              </h2>
+
+              <div className="grid md:grid-cols-2 gap-4">
+                <Field label="Full Name" value={addressForm.fullName}
+                  onChange={(e) => setAddressForm({ ...addressForm, fullName: e.target.value })} />
+                <Field label="Phone" value={addressForm.phone}
+                  onChange={(e) => setAddressForm({ ...addressForm, phone: e.target.value })} />
+                <Field label="Street" className="md:col-span-2"
+                  value={addressForm.street}
+                  onChange={(e) => setAddressForm({ ...addressForm, street: e.target.value })} />
+                <Field label="City" value={addressForm.city}
+                  onChange={(e) => setAddressForm({ ...addressForm, city: e.target.value })} />
+                <Field label="State" value={addressForm.state}
+                  onChange={(e) => setAddressForm({ ...addressForm, state: e.target.value })} />
+                <Field label="Pincode" value={addressForm.pincode}
+                  onChange={(e) => setAddressForm({ ...addressForm, pincode: e.target.value })} />
+              </div>
+
+              <button className="bg-indigo-600 text-white px-6 py-2 rounded-md">
+                Save Address
+              </button>
+            </form>
+          )}
+
+          {activeTab === "password" && (
+            <div className="max-w-md space-y-4">
+              <h2 className="text-lg font-semibold border-b pb-3">
+                Change Password
+              </h2>
+
+              <Field label="Current Password" type="password"
+                onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })} />
+              <Field label="New Password" type="password"
+                onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })} />
+              <Field label="Confirm Password" type="password"
+                onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })} />
+
+              <button
+                onClick={updatePassword}
+                className="bg-indigo-600 text-white px-6 py-2 rounded-md"
+              >
+                Update Password
+              </button>
+            </div>
+          )}
+        </main>
+      </div>
+    </div>
   );
 };
 
 export default ProfilePage;
+
