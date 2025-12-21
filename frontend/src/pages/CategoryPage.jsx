@@ -203,8 +203,8 @@ const CategoryPage = () => {
                 value={sort}
                 onChange={(e) => setSort(e.target.value)}
                 className="w-full border px-3 py-2
-				bg-white/70 backdrop-blur-sm
-				dark:bg-slate-900/70"
+              bg-white/70 backdrop-blur-sm
+              dark:bg-slate-900/70"
               >
                 <option value="">Default sorting</option>
                 <option value="popularity">

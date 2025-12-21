@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "../lib/axios";
-import { PackageCheck, Truck, Eye } from "lucide-react";
+import { PackageCheck, Truck, Eye, ImageOff } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 
@@ -52,7 +52,6 @@ const MyOrdersPage = () => {
   return (
     <div className="min-h-screen bg-slate-100 dark:bg-slate-900 pt-28 pb-20">
       <div className="max-w-5xl mx-auto px-4 space-y-6">
-
         <h1 className="text-2xl font-bold text-slate-900 dark:text-white">
           My Orders
         </h1>
@@ -69,30 +68,22 @@ const MyOrdersPage = () => {
               p-5 space-y-4
             "
           >
-            {/* ORDER HEADER */}
+            {/* HEADER */}
             <div className="flex flex-wrap justify-between gap-4">
               <div>
-                <p className="text-sm text-slate-500">
-                  Order ID
-                </p>
-                <p className="font-semibold">
-                  #{order._id.slice(-6)}
-                </p>
+                <p className="text-sm text-slate-500">Order ID</p>
+                <p className="font-semibold">#{order._id.slice(-6)}</p>
               </div>
 
               <div>
-                <p className="text-sm text-slate-500">
-                  Order Date
-                </p>
+                <p className="text-sm text-slate-500">Order Date</p>
                 <p className="font-medium">
                   {new Date(order.createdAt).toLocaleDateString()}
                 </p>
               </div>
 
               <div>
-                <p className="text-sm text-slate-500">
-                  Total
-                </p>
+                <p className="text-sm text-slate-500">Total</p>
                 <p className="font-bold text-emerald-600">
                   ₹{order.totalAmount}
                 </p>
@@ -105,40 +96,46 @@ const MyOrdersPage = () => {
 
             {/* PRODUCTS */}
             <div className="divide-y">
-              {order.products.map((item) => (
-                <div
-                  key={item.product._id}
-                  className="flex gap-4 py-4"
-                >
-                  <img
-                    src={item.product.image}
-                    className="w-20 h-20 rounded-md object-cover border"
-                  />
+              {order.products.map((item, idx) => {
+                const product = item.product;
 
-                  <div className="flex-1">
-                    <p className="font-medium text-slate-900 dark:text-white">
-                      {item.product.name}
-                    </p>
-                    <p className="text-sm text-slate-500">
-                      Qty: {item.quantity}
-                    </p>
-                    <p className="text-sm font-semibold text-emerald-600">
-                      ₹{item.price}
-                    </p>
+                return (
+                  <div key={idx} className="flex gap-4 py-4">
+                    {/* IMAGE */}
+                    {product?.image ? (
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-20 h-20 rounded-md object-cover border"
+                      />
+                    ) : (
+                      <div className="w-20 h-20 flex items-center justify-center rounded-md border bg-slate-100 dark:bg-slate-700">
+                        <ImageOff className="text-slate-400" />
+                      </div>
+                    )}
+
+                    {/* INFO */}
+                    <div className="flex-1">
+                      <p className="font-medium text-slate-900 dark:text-white">
+                        {product?.name || "Product unavailable"}
+                      </p>
+                      <p className="text-sm text-slate-500">
+                        Qty: {item.quantity}
+                      </p>
+                      <p className="text-sm font-semibold text-emerald-600">
+                        ₹{item.price}
+                      </p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* ACTIONS */}
             <div className="flex justify-end gap-4 pt-2">
               <Link
                 to={`/order/${order._id}`}
-                className="
-                  flex items-center gap-1
-                  text-sm font-medium
-                  text-indigo-600 hover:underline
-                "
+                className="flex items-center gap-1 text-sm font-medium text-indigo-600 hover:underline"
               >
                 <Eye size={16} /> View Details
               </Link>
@@ -163,3 +160,4 @@ const MyOrdersPage = () => {
 };
 
 export default MyOrdersPage;
+

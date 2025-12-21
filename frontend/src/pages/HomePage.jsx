@@ -141,8 +141,6 @@ const HomePage = () => {
 					})}
 				</div>
 			</section>
-
-			
 			<section className="max-w-7xl mx-auto px-4 py-12 bg-white dark:bg-slate-800 rounded-2xl shadow-lg">
 				<div className="flex flex-col md:flex-row justify-between gap-4 mb-6">
 					<h2 className="text-2xl font-bold text-slate-900 dark:text-white flex items-center gap-2">

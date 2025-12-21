@@ -33,10 +33,9 @@ const AdminPage = () => {
   }, [fetchAllProducts]);
 
   return (
-    /* ✅ SHARED FLEX CONTAINER */
+   
     <div className="flex h-screen bg-slate-100 dark:bg-slate-950 text-slate-900 dark:text-white">
 
-      {/* ================= SIDEBAR ================= */}
       <aside
         className={`
           ${SIDEBAR_WIDTH}
@@ -97,10 +96,8 @@ const AdminPage = () => {
         </nav>
       </aside>
 
-      {/* ================= MAIN CONTENT ================= */}
       <main className="flex-1 px-4 md:px-8 py-12 relative overflow-y-auto">
 
-        {/* TOP RIGHT ACTIONS */}
         <div className="fixed top-6 right-6 flex items-center gap-4 z-50">
           <button
             className="relative p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition"

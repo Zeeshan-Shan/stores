@@ -16,7 +16,7 @@ const CartPage = () => {
   const { cart } = useCartStore();
 
   return (
-    // ❌ min-h-screen REMOVED
+    
     <div className="bg-slate-100 dark:bg-slate-950 pt-28">
       <div className="mx-auto max-w-7xl px-4">
         <motion.h1
@@ -67,9 +67,9 @@ const CartPage = () => {
               <OrderSummary />
               <GiftCouponCard />
               <ShippingProgress currentStep={1} />
-              <LoyaltyPointsCard points={180} />
-              <SecureCheckoutBadges />
-              <InvoicePreview order={{ id: "ORD123", total: 2499 }} />
+              {/* <LoyaltyPointsCard points={180} /> */}
+              {/* <SecureCheckoutBadges /> */}
+              {/* <InvoicePreview order={{ id: "ORD123", total: 2499 }} /> */}
             </motion.div>
           )}
         </div>

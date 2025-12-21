@@ -41,7 +41,6 @@ const CartItem = ({ item }) => {
 						{item.description}
 					</p>
 
-					{/* PRICE */}
 					<p className="text-lg font-bold text-emerald-400">
 						₹{item.price}
 					</p>

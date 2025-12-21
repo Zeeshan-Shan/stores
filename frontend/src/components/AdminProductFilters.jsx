@@ -3,7 +3,7 @@ import { Search } from "lucide-react";
 const AdminProductFilters = ({ search, setSearch, min, setMin, max, setMax }) => {
 	return (
 		<div className="flex flex-wrap gap-4 mb-6">
-			<div className="relative flex-1 min-w-[220px]">
+			<div className="relative flex-1 min-w-55">
 				<Search className="absolute left-3 top-2.5 text-slate-400" size={18} />
 				<input
 					type="text"
