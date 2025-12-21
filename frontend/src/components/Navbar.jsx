@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Link, NavLink, useNavigate } from "react-router-dom";
 import {
   ShoppingCart,
-  UserPlus,
   Lock,
   Search,
   User,
@@ -13,7 +12,6 @@ import {
   Package,
   Settings,
   LogOut,
-
   Monitor,
   Tv,
   Zap,
@@ -25,56 +23,29 @@ import {
 
 import { useUserStore } from "../stores/useUserStore";
 import { useCartStore } from "../stores/useCartStore";
+
+/* =======================
+   CATEGORY DATA
+======================= */
 const categories = [
-  {
-    name: "Electronics",
-    icon: Monitor,
-    slug: "electronics",
-    color: "text-indigo-500",
-  },
-  {
-    name: "TVs & Appliances",
-    icon: Tv,
-    slug: "tv",
-    color: "text-purple-500",
-  },
-  {
-    name: "AC",
-    icon: Zap,
-    slug: "ac",
-    color: "text-teal-500",
-  },
-  {
-    name: "Coolers",
-    icon: Wind,
-    slug: "coolers",
-    color: "text-blue-500",
-  },
-  {
-    name: "Fans",
-    icon: Fan,
-    slug: "fans",
-    color: "text-cyan-500",
-  },
-  {
-    name: "Wires & Cables",
-    icon: Cable,
-    slug: "wires-cables",
-    color: "text-orange-500",
-  },
-  {
-    name: "Refrigerators",
-    icon: Refrigerator,
-    slug: "refrigerators",
-    color: "text-yellow-500",
-  },
+  { name: "Electronics", icon: Monitor, slug: "electronics", color: "text-indigo-500" },
+  { name: "TVs & Appliances", icon: Tv, slug: "tv", color: "text-purple-500" },
+  { name: "AC", icon: Zap, slug: "ac", color: "text-teal-500" },
+  { name: "Coolers", icon: Wind, slug: "coolers", color: "text-blue-500" },
+  { name: "Fans", icon: Fan, slug: "fans", color: "text-cyan-500" },
+  { name: "Wires & Cables", icon: Cable, slug: "wires-cables", color: "text-orange-500" },
+  { name: "Refrigerators", icon: Refrigerator, slug: "refrigerators", color: "text-yellow-500" },
 ];
+
 const Navbar = () => {
   const { user, logout } = useUserStore();
   const { cart } = useCartStore();
   const isAdmin = user?.role === "admin";
   const navigate = useNavigate();
 
+  /* =======================
+     THEME STATE
+  ======================= */
   const [theme, setTheme] = useState(() => {
     const saved = localStorage.getItem("theme");
     if (saved) return saved;
@@ -82,6 +53,11 @@ const Navbar = () => {
       ? "dark"
       : "light";
   });
+
+  /* =======================
+     USER MENU STATE
+  ======================= */
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -95,6 +71,7 @@ const Navbar = () => {
   };
 
   const handleLogout = async () => {
+    setMenuOpen(false);
     await logout();
     navigate("/login");
   };
@@ -132,7 +109,7 @@ const Navbar = () => {
             {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
           </button>
 
-          {/* NOTIFICATION */}
+          {/* NOTIFICATIONS */}
           {user && (
             <button className="relative p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800">
               <Bell size={20} />
@@ -168,16 +145,27 @@ const Navbar = () => {
 
           {/* USER MENU */}
           {user ? (
-            <div className="relative group">
-              <button className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800">
+            <div className="relative">
+              <button
+                onClick={() => setMenuOpen((prev) => !prev)}
+                className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800"
+              >
                 <User size={18} />
                 <span className="text-sm font-medium">{user.name}</span>
                 <ChevronDown size={14} />
               </button>
 
-              <div className="absolute right-0 invisible w-56 mt-2 bg-white border shadow-xl opacity-0 dark:bg-gray-800 rounded-xl group-hover:visible group-hover:opacity-100">
+              {/* DROPDOWN */}
+              <div
+                className={`
+                  absolute right-0 w-56 mt-2 bg-white border shadow-xl
+                  dark:bg-gray-800 rounded-xl transition-all
+                  ${menuOpen ? "opacity-100 visible" : "opacity-0 invisible"}
+                `}
+              >
                 <Link
                   to="/profile"
+                  onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <User size={16} /> Profile
@@ -185,6 +173,7 @@ const Navbar = () => {
 
                 <Link
                   to="/my-orders"
+                  onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <Package size={16} /> Orders
@@ -192,6 +181,7 @@ const Navbar = () => {
 
                 <Link
                   to="/settings"
+                  onClick={() => setMenuOpen(false)}
                   className="flex items-center gap-3 px-4 py-3 hover:bg-gray-100 dark:hover:bg-gray-700"
                 >
                   <Settings size={16} /> Settings
@@ -256,3 +246,4 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
