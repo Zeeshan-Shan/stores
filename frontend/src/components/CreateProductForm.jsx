@@ -224,7 +224,9 @@ const categories = [
   "coolers",
   "fan",
   "wires",
+  "Refrigerator",
   "cables"
+
 ];
 
 const CreateProductForm = () => {
