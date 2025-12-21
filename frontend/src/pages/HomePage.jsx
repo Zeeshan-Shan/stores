@@ -16,10 +16,10 @@ import {
   Truck,
   Headphones,
   CreditCard,
+  RefrigeratorIcon,
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
-// Original slider images - tumhare local images
 const sliderImages = [
   "/TV1.jpg",
   "/fan.jpg.webp",
@@ -33,10 +33,9 @@ const categories = [
   { name: "Coolers", icon: Wind, slug: "coolers", color: "text-blue-500", bg: "bg-blue-50 dark:bg-blue-900/20" },
   { name: "Fans", icon: Fan, slug: "fan", color: "text-cyan-500", bg: "bg-cyan-50 dark:bg-cyan-900/20" },
   { name: "Wires & Cables", icon: Cable, slug: "wires", color: "text-orange-500", bg: "bg-orange-50 dark:bg-orange-900/20" },
-  { name: "Cables", icon: Cable, slug: "cables", color: "text-yellow-500", bg: "bg-yellow-50 dark:bg-yellow-900/20" },
+  { name: "Refrigerator", icon: RefrigeratorIcon, slug: "refrigerator", color: "text-yellow-500", bg: "bg-yellow-50 dark:bg-yellow-900/20" },
 ];
 
-// Featured banners slider
 const featuredBanners = [
   {
     title: "Summer Sale",
