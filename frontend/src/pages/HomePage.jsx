@@ -26,7 +26,6 @@ const sliderImages = [
   "/cable.jpg.jpg",
 ];
 
-// Categories - Navbar ke same categories but AC and Coolers separate
 const categories = [
   { name: "Electronics", icon: Monitor, slug: "electronics", color: "text-indigo-500", bg: "bg-indigo-50 dark:bg-indigo-900/20" },
   { name: "TVs & Appliances", icon: Tv, slug: "tv", color: "text-purple-500", bg: "bg-purple-50 dark:bg-purple-900/20" },
