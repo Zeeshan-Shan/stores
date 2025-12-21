@@ -267,7 +267,7 @@ const categories = [
   { name: "Coolers", slug: "coolers" },
   { name: "Fans", slug: "fan" },
   { name: "Wires & Cables", slug: "wires & cables" },
-  { name: "Freeze", slug: "freeze" },
+  { name: "Refrigerators", slug: "refrigerators" },
 ];
 
 const CategoryPage = () => {

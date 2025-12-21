@@ -236,7 +236,7 @@ const CreateProductForm = () => {
     price: "",
     category: "",
     image: "",
-    stock: "10", // Default stock add kiya
+    stock: "10", 
   });
 
   const { createProduct, loading, error } = useProductStore();
@@ -301,7 +301,7 @@ const CreateProductForm = () => {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+    if (file.size > 5 * 1024 * 1024) { 
       alert("Image size should be less than 5MB");
       return;
     }
