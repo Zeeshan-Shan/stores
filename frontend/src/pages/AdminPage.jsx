@@ -102,7 +102,7 @@ const AdminPage = () => {
   const getActiveTab = () => menu.find(m => m.id === activeTab);
 
   return (
-    <div className="flex h-screen overflow-hidden text-gray-900 bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 dark:text-white">
+    <div className="flex h-screen overflow-hidden text-gray-900 bg-linear-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-950 dark:text-white">
       {/* Mobile Overlay */}
       <AnimatePresence>
         {mobileSidebarOpen && (
@@ -130,11 +130,11 @@ const AdminPage = () => {
         <div className="p-6 border-b border-gray-200 dark:border-gray-800">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl">
+              <div className="p-2 bg-linear-to-r from-indigo-500 to-purple-600 rounded-xl">
                 <Shield className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-transparent bg-gradient-to-r from-indigo-500 to-purple-600 bg-clip-text">
+                <h2 className="text-xl font-bold text-transparent bg-linear-to-r from-indigo-500 to-purple-600 bg-clip-text">
                   Admin Panel
                 </h2>
 <p className="text-xs font-medium text-gray-600 dark:text-gray-400">
@@ -173,7 +173,7 @@ const AdminPage = () => {
                   group relative flex items-center gap-3
                   px-4 py-3.5 rounded-xl transition-all duration-300
                   ${active 
-                    ? `bg-gradient-to-r ${item.color} text-white shadow-lg` 
+                    ? `bg-linear-to-r ${item.color} text-white shadow-lg` 
                     : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                   }
                 `}
@@ -240,7 +240,7 @@ const AdminPage = () => {
             <div className="p-6 border-b border-gray-200 dark:border-gray-800">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="p-2 bg-gradient-to-r from-indigo-500 to-purple-600 rounded-xl">
+                  <div className="p-2 bg-linear-to-r from-indigo-500 to-purple-600 rounded-xl">
                     <Shield className="w-6 h-6 text-white" />
                   </div>
                   <div>
@@ -271,7 +271,7 @@ const AdminPage = () => {
                     className={`
                       flex items-center gap-3 px-4 py-3.5 rounded-xl w-full mb-2
                       ${active 
-                        ? `bg-gradient-to-r ${item.color} text-white` 
+                        ? `bg-linear-to-r ${item.color} text-white` 
                         : "text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800"
                       }
                     `}
@@ -368,7 +368,7 @@ const AdminPage = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="p-4 mt-6 border border-gray-200 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 dark:border-gray-800 rounded-xl"
+            className="p-4 mt-6 border border-gray-200 bg-linear-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 dark:border-gray-800 rounded-xl"
           >
             <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
               <div>

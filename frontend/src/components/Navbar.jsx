@@ -218,7 +218,7 @@ const Navbar = () => {
           {isAdmin && (
             <Link
               to="/secret-dashboard"
-              className="items-center hidden gap-2 px-3 py-2 text-white rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 sm:flex"
+              className="items-center hidden gap-2 px-3 py-2 text-white rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 sm:flex"
             >
               <Lock size={16} />
               <span className="text-sm font-medium">Admin</span>
@@ -308,7 +308,7 @@ const Navbar = () => {
             <div className="flex items-center gap-2">
               <Link
                 to="/login"
-                className="px-4 py-2 text-white rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
+                className="px-4 py-2 text-white rounded-lg bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700"
               >
                 Login
               </Link>

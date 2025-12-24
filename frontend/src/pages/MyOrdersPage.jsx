@@ -139,7 +139,7 @@ const MyOrdersPage = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen pb-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 pt-28">
+      <div className="min-h-screen pb-20 bg-linear-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 pt-28">
         <div className="max-w-6xl px-4 mx-auto">
           {/* Skeleton Header */}
           <div className="h-12 mb-8 bg-gray-200 dark:bg-gray-800 rounded-xl animate-pulse"></div>
@@ -157,10 +157,10 @@ const MyOrdersPage = () => {
 
   if (orders.length === 0) {
     return (
-      <div className="min-h-screen pb-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 pt-28">
+      <div className="min-h-screen pb-20 bg-linear-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 pt-28">
         <div className="max-w-6xl px-4 mx-auto">
           <div className="py-20 text-center">
-            <div className="flex items-center justify-center w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+            <div className="flex items-center justify-center w-20 h-20 mx-auto mb-6 rounded-full bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
               <ShoppingBag className="w-10 h-10 text-gray-400" />
             </div>
             <h2 className="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
@@ -171,7 +171,7 @@ const MyOrdersPage = () => {
             </p>
             <Link
               to="/"
-              className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg"
+              className="inline-flex items-center gap-2 px-6 py-3 font-semibold text-white transition-all duration-300 bg-linear-to-r from-blue-600 to-indigo-600 rounded-xl hover:from-blue-700 hover:to-indigo-700 hover:shadow-lg"
             >
               Start Shopping
             </Link>
@@ -182,7 +182,7 @@ const MyOrdersPage = () => {
   }
 
   return (
-    <div className="min-h-screen pb-20 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 pt-28">
+    <div className="min-h-screen pb-20 bg-linear-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950 pt-28">
       <div className="max-w-6xl px-4 mx-auto">
         {/* Header */}
         <motion.div
@@ -212,7 +212,7 @@ const MyOrdersPage = () => {
 
           {/* Stats */}
           <div className="grid grid-cols-1 gap-4 mb-8 md:grid-cols-3">
-            <div className="p-4 border border-blue-200 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-blue-800/30 rounded-xl">
+            <div className="p-4 border border-blue-200 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 dark:border-blue-800/30 rounded-xl">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-blue-700 dark:text-blue-400">Total Orders</p>
@@ -222,7 +222,7 @@ const MyOrdersPage = () => {
               </div>
             </div>
             
-            <div className="p-4 border border-green-200 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-800/30 rounded-xl">
+            <div className="p-4 border border-green-200 bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 dark:border-green-800/30 rounded-xl">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-green-700 dark:text-green-400">Delivered</p>
@@ -232,7 +232,7 @@ const MyOrdersPage = () => {
               </div>
             </div>
             
-            <div className="p-4 border border-purple-200 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 dark:border-purple-800/30 rounded-xl">
+            <div className="p-4 border border-purple-200 bg-linear-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 dark:border-purple-800/30 rounded-xl">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-purple-700 dark:text-purple-400">Total Spent</p>
@@ -296,7 +296,7 @@ const MyOrdersPage = () => {
                 animate={{ opacity: 1 }}
                 className="py-16 text-center"
               >
-                <div className="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+                <div className="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-full bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
                   <Filter className="w-10 h-10 text-gray-400" />
                 </div>
                 <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -388,7 +388,7 @@ const MyOrdersPage = () => {
                           </div>
                           <div className="h-2 overflow-hidden bg-gray-200 rounded-full dark:bg-gray-700">
                             <motion.div
-                              className="h-full bg-gradient-to-r from-blue-500 to-emerald-500"
+                              className="h-full bg-linear-to-r from-blue-500 to-emerald-500"
                               initial={{ width: 0 }}
                               animate={{ width: `${progress}%` }}
                               transition={{ duration: 1 }}
@@ -492,20 +492,20 @@ const MyOrdersPage = () => {
                                 <div className="space-y-3">
                                   <Link
                                     // to={`/order/${order._id}`}
-                                    className="flex items-center justify-center gap-2 px-4 py-3 font-medium text-white transition-all duration-300 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl hover:from-blue-700 hover:to-indigo-700"
+                                    className="flex items-center justify-center gap-2 px-4 py-3 font-medium text-white transition-all duration-300 bg-linear-to-r from-blue-600 to-indigo-600 rounded-xl hover:from-blue-700 hover:to-indigo-700"
                                   >
                                     Order Details
                                   </Link>
                                   
                                   {order.orderStatus === "DELIVERED" && (
-                                    <button className="flex items-center justify-center gap-2 px-4 py-3 font-medium text-white transition-all duration-300 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl hover:from-green-600 hover:to-emerald-700">
+                                    <button className="flex items-center justify-center gap-2 px-4 py-3 font-medium text-white transition-all duration-300 bg-linear-to-r from-green-500 to-emerald-600 rounded-xl hover:from-green-600 hover:to-emerald-700">
                                       <PackageCheck size={18} />
                                       Download Invoice
                                     </button>
                                   )}
                                   
                                   {order.orderStatus === "CANCELLED" && (
-                                    <button className="flex items-center justify-center gap-2 px-4 py-3 font-medium text-white transition-all duration-300 bg-gradient-to-r from-rose-500 to-pink-600 rounded-xl hover:from-rose-600 hover:to-pink-700">
+                                    <button className="flex items-center justify-center gap-2 px-4 py-3 font-medium text-white transition-all duration-300 bg-linear-to-r from-rose-500 to-pink-600 rounded-xl hover:from-rose-600 hover:to-pink-700">
                                       <AlertCircle size={18} />
                                       Need Help?
                                     </button>
@@ -529,7 +529,7 @@ const MyOrdersPage = () => {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="p-6 mt-8 border border-gray-200 bg-gradient-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 dark:border-gray-700 rounded-2xl"
+            className="p-6 mt-8 border border-gray-200 bg-linear-to-r from-gray-50 to-white dark:from-gray-800 dark:to-gray-900 dark:border-gray-700 rounded-2xl"
           >
             <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
               <div>

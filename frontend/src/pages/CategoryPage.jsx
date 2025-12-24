@@ -451,7 +451,7 @@ const CategoryPage = () => {
             <div className="flex items-center gap-4">
               <div className="text-gray-700 dark:text-gray-300">
                 <p className="font-medium">
-                  Found <span className="font-bold text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text">{filteredProducts.length}</span> of{" "}
+                  Found <span className="font-bold text-transparent bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text">{filteredProducts.length}</span> of{" "}
                   <span className="font-bold">{products.length}</span> products
                 </p>
               </div>
@@ -538,9 +538,9 @@ const CategoryPage = () => {
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.9 }}
-                className="p-16 text-center border border-gray-100 shadow-lg bg-gradient-to-br from-white to-gray-50 dark:from-gray-800/80 dark:to-gray-900/80 rounded-2xl dark:border-gray-700/50 backdrop-blur-sm"
+                className="p-16 text-center border border-gray-100 shadow-lg bg-linear-to-br from-white to-gray-50 dark:from-gray-800/80 dark:to-gray-900/80 rounded-2xl dark:border-gray-700/50 backdrop-blur-sm"
               >
-                <div className="inline-flex p-4 mb-6 rounded-full bg-gradient-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
+                <div className="inline-flex p-4 mb-6 rounded-full bg-linear-to-r from-gray-100 to-gray-200 dark:from-gray-700 dark:to-gray-800">
                   <Sparkles size={32} className="text-gray-400" />
                 </div>
                 <h3 className="mb-3 text-2xl font-bold text-gray-900 dark:text-white">
@@ -611,7 +611,7 @@ const CategoryPage = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
-              className="p-6 mt-12 text-center rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20"
+              className="p-6 mt-12 text-center rounded-2xl bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20"
             >
               <p className="text-gray-700 dark:text-gray-300">
                 Showing <span className="font-bold text-blue-600 dark:text-blue-400">{filteredProducts.length}</span> products • 

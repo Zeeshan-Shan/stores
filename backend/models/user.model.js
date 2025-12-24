@@ -32,14 +32,19 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
     
-    address: {
+    addresses: [{
+      _id:{type:mongoose.Schema.Types.ObjectId,default:()=>new mongoose.Types.ObjectId()},
       fullName: { type: String, default: "" },
       phone: { type: String, default: "" },
-      street: { type: String, default: "" },
-      city: { type: String, default: "" },
-      state: { type: String, default: "" },
-      pincode: { type: String, default: "" },
-    },
+      street: { type: String, required:true },
+      city: { type: String, required:true},
+      state: { type: String, required:true},
+      pincode: { type: String, required:true },
+      country:{type:String,default:"India"},
+      landmark:{type:String,default:""},
+      isDefault:{type:Boolean,default:false},
+      createAt:{type:Date,default:Date.now}
+    }],
 
     cartItems: [
       {

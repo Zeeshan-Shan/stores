@@ -221,7 +221,7 @@ const AdminOrdersTab = () => {
         {Array.from({ length: 6 }).map((_, i) => (
           <div
             key={i}
-            className="h-64 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl animate-pulse"
+            className="h-64 bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl animate-pulse"
           />
         ))}
       </div>
@@ -231,7 +231,7 @@ const AdminOrdersTab = () => {
   if (!orders.length) {
     return (
       <div className="py-16 text-center">
-        <div className="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+        <div className="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-full bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
           <Package className="w-10 h-10 text-gray-400" />
         </div>
         <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -248,27 +248,27 @@ const AdminOrdersTab = () => {
     <div className="space-y-8">
       {/* Stats */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-5">
-        <div className="p-4 border border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 dark:border-blue-800/30 rounded-xl">
+        <div className="p-4 border border-blue-200 bg-linear-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 dark:border-blue-800/30 rounded-xl">
           <p className="text-sm text-blue-700 dark:text-blue-400">Total</p>
           <p className="text-2xl font-bold text-blue-900 dark:text-blue-300">{stats.total}</p>
         </div>
         
-        <div className="p-4 border bg-gradient-to-br from-amber-50 to-yellow-100 dark:from-amber-900/20 dark:to-yellow-800/20 border-amber-200 dark:border-amber-800/30 rounded-xl">
+        <div className="p-4 border bg-linear-to-br from-amber-50 to-yellow-100 dark:from-amber-900/20 dark:to-yellow-800/20 border-amber-200 dark:border-amber-800/30 rounded-xl">
           <p className="text-sm text-amber-700 dark:text-amber-400">Pending</p>
           <p className="text-2xl font-bold text-amber-900 dark:text-amber-300">{stats.pending}</p>
         </div>
         
-        <div className="p-4 border bg-gradient-to-br from-emerald-50 to-green-100 dark:from-emerald-900/20 dark:to-green-800/20 border-emerald-200 dark:border-emerald-800/30 rounded-xl">
+        <div className="p-4 border bg-linear-to-br from-emerald-50 to-green-100 dark:from-emerald-900/20 dark:to-green-800/20 border-emerald-200 dark:border-emerald-800/30 rounded-xl">
           <p className="text-sm text-emerald-700 dark:text-emerald-400">Delivered</p>
           <p className="text-2xl font-bold text-emerald-900 dark:text-emerald-300">{stats.delivered}</p>
         </div>
         
-        <div className="p-4 border bg-gradient-to-br from-rose-50 to-red-100 dark:from-rose-900/20 dark:to-red-800/20 border-rose-200 dark:border-rose-800/30 rounded-xl">
+        <div className="p-4 border bg-linear-to-br from-rose-50 to-red-100 dark:from-rose-900/20 dark:to-red-800/20 border-rose-200 dark:border-rose-800/30 rounded-xl">
           <p className="text-sm text-rose-700 dark:text-rose-400">Cancelled</p>
           <p className="text-2xl font-bold text-rose-900 dark:text-rose-300">{stats.cancelled}</p>
         </div>
         
-        <div className="p-4 border border-purple-200 bg-gradient-to-br from-purple-50 to-pink-100 dark:from-purple-900/20 dark:to-pink-800/20 dark:border-purple-800/30 rounded-xl">
+        <div className="p-4 border border-purple-200 bg-linear-to-br from-purple-50 to-pink-100 dark:from-purple-900/20 dark:to-pink-800/20 dark:border-purple-800/30 rounded-xl">
           <p className="text-sm text-purple-700 dark:text-purple-400">Refunds</p>
           <p className="text-2xl font-bold text-purple-900 dark:text-purple-300">{stats.refunds}</p>
         </div>
@@ -328,7 +328,7 @@ const AdminOrdersTab = () => {
               animate={{ opacity: 1 }}
               className="py-16 text-center"
             >
-              <div className="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+              <div className="flex items-center justify-center w-20 h-20 mx-auto mb-4 rounded-full bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
                 <AlertCircle className="w-10 h-10 text-gray-400" />
               </div>
               <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
@@ -353,7 +353,7 @@ const AdminOrdersTab = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="overflow-hidden transition-all duration-300 border border-gray-200 shadow-lg group bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 dark:border-gray-800 rounded-2xl hover:shadow-xl"
+                  className="overflow-hidden transition-all duration-300 border border-gray-200 shadow-lg group bg-linear-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-950 dark:border-gray-800 rounded-2xl hover:shadow-xl"
                 >
                   {/* Order Header */}
                   <div 
@@ -548,19 +548,41 @@ const AdminOrdersTab = () => {
 
                               {/* Customer Info */}
                               <div>
-                                <h4 className="flex items-center gap-2 mb-3 font-semibold text-gray-900 dark:text-white">
-                                  <User size={18} />
-                                  Customer Details
-                                </h4>
-                                <div className="p-4 space-y-2 bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-700 rounded-xl">
-                                  <p className="font-medium text-gray-900 dark:text-white">{order.user?.name}</p>
-                                  <p className="text-sm text-gray-600 dark:text-gray-400">{order.user?.email}</p>
-                                  <p className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-                                    <Phone size={14} />
-                                    {order.user?.mobile || "Not provided"}
-                                  </p>
+                                  <h4 className="flex items-center gap-2 mb-3 font-semibold text-gray-900 dark:text-white">
+                                    <User size={18} />
+                                    Customer Details
+                                  </h4>
+                                  <div className="p-4 space-y-3 bg-white border border-gray-200 dark:bg-gray-900 dark:border-gray-700 rounded-xl">
+                                    <div className="space-y-2">
+                                      <p className="font-medium text-gray-900 dark:text-white">{order.user?.name}</p>
+                                      <p className="text-sm text-gray-600 dark:text-gray-400">{order.user?.email}</p>
+                                      <p className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+                                        <Phone size={14} />
+                                        {order.user?.mobile || "Not provided"}
+                                      </p>
+                                    </div>
+                                    
+                                    {/* Delivery Address Section */}
+                                    {order.deliveryAddress && (
+                                      <div className="pt-3 border-t border-gray-100 dark:border-gray-700">
+                                        <div className="flex items-start gap-2 mb-2">
+                                          <MapPin size={14} className="mt-1 text-gray-500" />
+                                          <span className="text-sm font-medium text-gray-900 dark:text-white">
+                                            Delivery Address
+                                          </span>
+                                        </div>
+                                        <div className="pl-6 space-y-1 text-sm text-gray-600 dark:text-gray-400">
+                                          <p>{order.deliveryAddress.street}</p>
+                                          <p>{order.deliveryAddress.city}, {order.deliveryAddress.state}</p>
+                                          <p>{order.deliveryAddress.country} - {order.deliveryAddress.pincode}</p>
+                                          {order.deliveryAddress.landmark && (
+                                            <p className="text-xs">Landmark: {order.deliveryAddress.landmark}</p>
+                                          )}
+                                        </div>
+                                      </div>
+                                    )}
+                                  </div>
                                 </div>
-                              </div>
 
                               {/* Action Buttons */}
                               <div className="flex gap-3">

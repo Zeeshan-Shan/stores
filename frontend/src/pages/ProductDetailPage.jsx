@@ -71,7 +71,7 @@ const ProductDetailPage = () => {
   };
 
   return (
-    <div className="min-h-screen pb-16 pt-28 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
+    <div className="min-h-screen pb-16 pt-28 bg-linear-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-950">
       {/* Back Button */}
       <div className="px-4 mx-auto mb-6 max-w-7xl">
         <button
@@ -94,7 +94,7 @@ const ProductDetailPage = () => {
           {/* Left Column - Images */}
           <div className="space-y-6">
             {/* Main Image */}
-            <div className="relative p-8 overflow-hidden shadow-2xl rounded-3xl bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
+            <div className="relative p-8 overflow-hidden shadow-2xl rounded-3xl bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900">
               <img
                 src={images[selectedImage]}
                 alt={selectedProduct.name}
@@ -103,7 +103,7 @@ const ProductDetailPage = () => {
               
               {/* Badges */}
               <div className="absolute top-4 left-4">
-                <span className="px-3 py-1.5 text-xs font-bold text-white bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full">
+                <span className="px-3 py-1.5 text-xs font-bold text-white bg-linear-to-r from-blue-500 to-indigo-500 rounded-full">
                   BEST SELLER
                 </span>
               </div>
@@ -142,7 +142,7 @@ const ProductDetailPage = () => {
             </div>
 
             {/* Product Description Section (features की जगह) */}
-            <div className="p-6 border border-gray-100 rounded-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 dark:border-gray-700">
+            <div className="p-6 border border-gray-100 rounded-2xl bg-linear-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900 dark:border-gray-700">
               <h3 className="mb-4 text-xl font-semibold text-gray-900 dark:text-white">
                 Product Description
               </h3>
@@ -162,7 +162,7 @@ const ProductDetailPage = () => {
                 {selectedProduct.name}
               </h1>
               
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20">
                 <Zap size={14} className="text-blue-600 dark:text-blue-400" />
                 <span className="text-sm font-medium text-blue-600 dark:text-blue-400">
                   Premium Electronic Product
@@ -171,7 +171,7 @@ const ProductDetailPage = () => {
             </div>
 
             {/* Price Section */}
-            <div className="p-6 rounded-2xl bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10">
+            <div className="p-6 rounded-2xl bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10">
               <div className="flex items-end gap-4">
                 <div>
                   <span className="text-sm text-gray-600 dark:text-gray-400">Price</span>
@@ -193,7 +193,7 @@ const ProductDetailPage = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleAddToCart}
-                className="flex items-center justify-center flex-1 gap-3 px-8 py-4 font-bold text-white transition-all duration-300 shadow-lg rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl"
+                className="flex items-center justify-center flex-1 gap-3 px-8 py-4 font-bold text-white transition-all duration-300 shadow-lg rounded-xl bg-linear-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl"
               >
                 <ShoppingCart size={20} />
                 Add to Cart
@@ -203,7 +203,7 @@ const ProductDetailPage = () => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 onClick={handleBuyNow}
-                className="flex items-center justify-center flex-1 gap-3 px-8 py-4 font-bold text-white transition-all duration-300 shadow-lg rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 hover:shadow-xl"
+                className="flex items-center justify-center flex-1 gap-3 px-8 py-4 font-bold text-white transition-all duration-300 shadow-lg rounded-xl bg-linear-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 hover:shadow-xl"
               >
                 <ArrowRight size={20} />
                 Buy Now
@@ -215,7 +215,7 @@ const ProductDetailPage = () => {
             </div>
 
             {/* Stock Status */}
-            <div className="p-4 rounded-xl bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10">
+            <div className="p-4 rounded-xl bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10">
               <div className="flex items-center gap-3">
                 <Check size={20} className="text-green-600 dark:text-green-400" />
                 <div>
@@ -259,7 +259,7 @@ const ProductDetailPage = () => {
           className="mt-16"
         >
           {/* Tab Content */}
-          <div className="p-8 rounded-b-2xl bg-gradient-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
+          <div className="p-8 rounded-b-2xl bg-linear-to-br from-white to-gray-50 dark:from-gray-800 dark:to-gray-900">
             {activeTab === "description" && (
               <div className="space-y-6">
                 <h3 className="text-2xl font-bold text-gray-900 dark:text-white">Key Features</h3>

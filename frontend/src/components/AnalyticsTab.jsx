@@ -109,7 +109,7 @@ const AnalyticsCard = ({ title, value, icon: Icon, color, trend, subtitle }) => 
     whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
   >
     {/* Gradient Background */}
-    <div className={`absolute inset-0 bg-gradient-to-br ${color} opacity-90 group-hover:opacity-100 transition-opacity duration-300`} />
+    <div className={`absolute inset-0 bg-linear-to-br ${color} opacity-90 group-hover:opacity-100 transition-opacity duration-300`} />
     
     {/* Pattern Overlay */}
     <div className="absolute inset-0 opacity-10">
@@ -213,12 +213,12 @@ const AnalyticsTab = () => {
           {Array.from({ length: 4 }).map((_, i) => (
             <div
               key={i}
-              className="h-32 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl animate-pulse"
+              className="h-32 bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl animate-pulse"
             />
           ))}
         </div>
         {/* Skeleton Chart */}
-        <div className="h-96 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl animate-pulse" />
+        <div className="h-96 bg-linear-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 rounded-2xl animate-pulse" />
       </div>
     );
   }
@@ -245,7 +245,7 @@ const AnalyticsTab = () => {
           <button
             onClick={handleRefresh}
             disabled={isRefreshing}
-            className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50"
+            className="flex items-center gap-2 px-4 py-2.5 bg-linear-to-r from-blue-600 to-indigo-600 text-white font-medium rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-300 disabled:opacity-50"
           >
             <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             {isRefreshing ? 'Refreshing...' : 'Refresh'}
@@ -338,7 +338,7 @@ const AnalyticsTab = () => {
                 onClick={() => handleTimeRangeChange(range)}
                 className={`px-3 py-1.5 text-sm font-medium rounded-lg capitalize transition-all ${
                   timeRange === range
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white"
+                    ? "bg-linear-to-r from-blue-600 to-indigo-600 text-white"
                     : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                 }`}
               >
@@ -497,7 +497,7 @@ const AnalyticsTab = () => {
                 Top Performing Metrics
               </h3>
               <div className="space-y-4">
-                <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 rounded-xl">
+                <div className="p-4 bg-linear-to-r from-blue-50 to-indigo-50 dark:from-blue-900/10 dark:to-indigo-900/10 rounded-xl">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-700 dark:text-gray-300">Best Sales Day</span>
                     <span className="font-bold text-blue-600 dark:text-blue-400">
@@ -505,7 +505,7 @@ const AnalyticsTab = () => {
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 rounded-xl">
+                <div className="p-4 bg-linear-to-r from-green-50 to-emerald-50 dark:from-green-900/10 dark:to-emerald-900/10 rounded-xl">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-700 dark:text-gray-300">Highest Revenue</span>
                     <span className="font-bold text-green-600 dark:text-green-400">
@@ -513,7 +513,7 @@ const AnalyticsTab = () => {
                     </span>
                   </div>
                 </div>
-                <div className="p-4 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 rounded-xl">
+                <div className="p-4 bg-linear-to-r from-purple-50 to-pink-50 dark:from-purple-900/10 dark:to-pink-900/10 rounded-xl">
                   <div className="flex items-center justify-between">
                     <span className="text-gray-700 dark:text-gray-300">Avg. Daily Sales</span>
                     <span className="font-bold text-purple-600 dark:text-purple-400">

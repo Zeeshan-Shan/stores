@@ -6,14 +6,152 @@ import {
 	ShieldCheck,
 	Lock,
 	CreditCard,
+	MapPin,
+	User,
+	Phone,
+	Home,
+	Truck,
+	Package,
 } from "lucide-react";
 import axios from "../lib/axios";
+import { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 
 const OrderSummary = () => {
-	const { total, subtotal, coupon, isCouponApplied, cart } = useCartStore();
+	const { total, subtotal, coupon, isCouponApplied, cart, clearCart } = useCartStore();
 	const navigate = useNavigate();
+	
+	const [showAddressForm, setShowAddressForm] = useState(false);
+	const [addresses, setAddresses] = useState([]); 
+	const [selectedAddress, setSelectedAddress] = useState(null);
+	const [newAddress, setNewAddress] = useState({
+		fullName: "",
+		phone: "",
+		street: "",
+		city: "",
+		state: "",
+		pincode: "",
+		country: "India",
+		landmark: "",
+	});
+	const [shippingMethod, setShippingMethod] = useState("STANDARD");
+	const [savingAddress, setSavingAddress] = useState(false);
+	const [userProfile, setUserProfile] = useState(null);
+	const [processingPayment, setProcessingPayment] = useState(false);
+	const [loading, setLoading] = useState(true);
 
+	useEffect(() => {
+		const fetchUserData = async () => {
+			try {
+				setLoading(true);
+				const profileRes = await axios.get(`/auth/profile`);
+				setUserProfile(profileRes.data.user);
+				
+				setNewAddress(prev => ({
+					...prev,
+					fullName: profileRes.data.user?.name || "",
+					phone: profileRes.data.user?.mobile || "",
+				}));
+
+				const addressRes = await axios.get(`/addresses`);
+				setAddresses(addressRes.data.addresses || []);
+				
+				const defaultAddress = addressRes.data.addresses?.find(addr => addr.isDefault);
+				if (defaultAddress) {
+					setSelectedAddress(defaultAddress);
+				} else if (addressRes.data.addresses?.length > 0) {
+					setSelectedAddress(addressRes.data.addresses[0]);
+				}
+			} catch (error) {
+				console.error("Error fetching user Data:", error);
+				toast.error("Failed to load user data");
+			} finally {
+				setLoading(false);
+			}
+		};
+		fetchUserData();
+	}, []);
+	
 	const savings = subtotal - total;
+    
+	const shippingCosts = {
+		STANDARD: 49,
+		EXPRESS: 99,
+		SAME_DAY: 199,
+	};
+
+	const shippingCost = shippingCosts[shippingMethod] || 0;
+	const finalTotal = total + shippingCost;
+
+	const handleAddressChange = (e) => {
+		setNewAddress({
+			...newAddress,
+			[e.target.name]: e.target.value,
+		});
+	};
+
+	const validateAddress = () => {
+		const { street, city, state, pincode, phone, fullName } = newAddress;
+		if (!street.trim() || !city.trim() || !state.trim() || !pincode.trim() || !phone.trim() || !fullName.trim()) {
+			toast.error("Please fill all required address fields");
+			return false;
+		}
+		if (phone.length !== 10) {
+			toast.error("Please enter a valid 10-digit phone number");
+			return false;
+		}
+		if (pincode.length !== 6) {
+			toast.error("Please enter a valid 6-digit pincode");
+			return false;
+		}
+		return true;
+	};
+
+	const saveAddress = async () => {
+		if (!validateAddress()) return;
+
+		setSavingAddress(true);
+		try {
+			const response = await axios.post(`/addresses`, newAddress);
+			
+			const savedAddress = response.data.address;
+			setAddresses(response.data.addresses);
+			setSelectedAddress(savedAddress);
+			setShowAddressForm(false);
+			
+			setNewAddress({
+				fullName: userProfile?.name || "",
+				phone: userProfile?.mobile || "",
+				street: "",
+				city: "",
+				state: "",
+				pincode: "",
+				country: "India",
+				landmark: "",
+			});
+			
+			toast.success("Address saved successfully!");
+		} catch (error) {
+			console.error("Error saving address:", error);
+			toast.error(error.response?.data?.message || "Failed to save address");
+		} finally {
+			setSavingAddress(false);
+		}
+	};
+
+	const handleShowAddressForm = () => {
+		setNewAddress({
+			fullName: userProfile?.name || "",
+			phone: userProfile?.mobile || "",
+			street: "",
+			city: "",
+			state: "",
+			pincode: "",
+			country: "India",
+			landmark: "",
+		});
+		setShowAddressForm(true);
+	};
 
 	const loadRazorpayScript = () =>
 		new Promise((resolve) => {
@@ -26,49 +164,151 @@ const OrderSummary = () => {
 		});
 
 	const handleRazorpayPayment = async () => {
+		if (!cart || cart.length === 0) {
+			toast.error("Your cart is empty");
+			return;
+		}
+
+		if (!selectedAddress) {
+			toast.error("Please select a delivery address first");
+			return;
+		}
+
+		setProcessingPayment(true);
+		
 		try {
-			const { data } = await axios.post("/payments/create-checkout-session", {
-				products: cart,
-				couponCode: coupon ? coupon.code : null,
+			// Send cart items with correct structure
+			const { data } = await axios.post(`/orders/createOrder`, {
+				products: cart.map(item => ({
+					productId: item._id || item.product?._id,
+					quantity: item.quantity || 1,
+					size: item.size || "",
+					color: item.color || "",
+				})),
+				deliveryAddress: {
+					fullName: selectedAddress.fullName || userProfile?.name || "",
+					phone: selectedAddress.phone || userProfile?.mobile || "",
+					street: selectedAddress.street || "",
+					city: selectedAddress.city || "",
+					state: selectedAddress.state || "",
+					pincode: selectedAddress.pincode || "",
+					country: selectedAddress.country || "India",
+					landmark: selectedAddress.landmark || "",
+				},
+				shippingMethod,
+				couponCode: coupon && isCouponApplied ? coupon.code : null,
+				paymentMethod: "ONLINE", // Always online for Razorpay
 			});
 
+			const { order, paymentRequired } = data;
+
+			if (!paymentRequired) {
+				toast.success("Order placed successfully!");
+				clearCart();
+				navigate(`/orders/${order._id}`);
+				return;
+			}
+			
 			const loaded = await loadRazorpayScript();
-			if (!loaded) return alert("Razorpay SDK failed to load");
+			if (!loaded) {
+				toast.error("Payment gateway failed to load");
+				setProcessingPayment(false);
+				return;
+			}
+			
+			try {
+				const paymentResponse = await axios.post(`/orders/payment/initiate`, {
+					orderId: order._id,
+					amount: order.finalAmount * 100,
+				});
 
-			const options = {
-				key: data.key,
-				order_id: data.orderId,
-				amount: data.amount,
-				currency: "INR",
-				name: "Electronic Items Store",
-				description: "Secure Checkout",
-				handler: async (response) => {
-					const verifyRes = await axios.post(
-						"/payments/checkout-success",
-						{
-							razorpay_order_id: response.razorpay_order_id,
-							razorpay_payment_id: response.razorpay_payment_id,
-							razorpay_signature: response.razorpay_signature,
-							products: cart,
-							couponCode: coupon ? coupon.code : null,
+				const { razorpayOrderId, key, userName, userEmail } = paymentResponse.data;
+
+				const options = {
+					key,
+					order_id: razorpayOrderId,
+					amount: order.finalAmount * 100,
+					currency: "INR",
+					name: "Your Store",
+					description: `Order #${order._id.slice(-8).toUpperCase()}`,
+					handler: async (response) => {
+						try {
+							const verifyRes = await axios.post(`/orders/payment/verify`, {
+								razorpay_payment_id: response.razorpay_payment_id,
+								razorpay_order_id: response.razorpay_order_id,
+								razorpay_signature: response.razorpay_signature,
+								orderId: order._id,
+							});
+
+							if (verifyRes.data.success) {
+								toast.success("Payment successful! Order confirmed.");
+								clearCart();
+								navigate(`/orders/${order._id}`);
+							} else {
+								toast.error("Payment verification failed");
+								setProcessingPayment(false);
+							}
+						} catch (error) {
+							console.error("Payment verification error:", error);
+							toast.error(error.response?.data?.message || "Payment verification failed");
+							setProcessingPayment(false);
 						}
-					);
-
-					if (verifyRes.data.success) {
-						navigate("/checkout-success");
-					} else {
-						alert("Payment verification failed");
+					},
+					prefill: {
+						name: userName || userProfile?.name || "",
+						email: userEmail || userProfile?.email || "",
+						contact: selectedAddress.phone || userProfile?.mobile || "",
+					},
+					theme: { 
+						color: "#10B981" 
+					},
+					modal: {
+						ondismiss: function() {
+							toast.error("Payment cancelled");
+							setProcessingPayment(false);
+						}
 					}
-				},
-				theme: { color: "#10B981" },
-			};
+				};
 
-			new window.Razorpay(options).open();
+				const razorpayInstance = new window.Razorpay(options);
+				razorpayInstance.on('payment.failed', function(response) {
+					toast.error(`Payment failed: ${response.error.description}`);
+					setProcessingPayment(false);
+				});
+				razorpayInstance.open();
+				
+			} catch (paymentError) {
+				// If payment endpoints don't exist, use direct Razorpay
+				if (paymentError.response?.status === 404) {
+					toast.error("Payment system not configured. Please contact support.");
+					setProcessingPayment(false);
+					return;
+				}
+				throw paymentError;
+			}
+			
 		} catch (err) {
-			console.error("Razorpay error:", err);
-			alert("Payment initialization failed");
+			console.error("Payment error:", err);
+			const errorMessage = err.response?.data?.message || 
+								err.response?.data?.error || 
+								"Failed to process payment";
+			toast.error(errorMessage);
+			setProcessingPayment(false);
 		}
 	};
+
+	if (loading) {
+		return (
+			<div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-xl p-6">
+				<div className="animate-pulse space-y-4">
+					<div className="h-6 bg-slate-200 dark:bg-slate-700 rounded w-1/3"></div>
+					<div className="h-4 bg-slate-200 dark:bg-slate-700 rounded w-2/3"></div>
+					<div className="h-32 bg-slate-200 dark:bg-slate-700 rounded"></div>
+					<div className="h-10 bg-slate-200 dark:bg-slate-700 rounded"></div>
+				</div>
+			</div>
+		);
+	}
 
 	return (
 		<motion.div
@@ -96,7 +336,241 @@ const OrderSummary = () => {
 				)}
 			</div>
 
-			{/* PRICE BREAKDOWN */}
+			<div className="space-y-4">
+				<h4 className="flex items-center gap-2 font-medium text-slate-900 dark:text-white">
+					<MapPin size={18} />
+					Delivery Address
+				</h4>
+
+				{addresses.length > 0 && !showAddressForm && (
+					<div className="space-y-2">
+						{addresses.map((addr) => (
+							<div
+								key={addr._id || addr.id}
+								onClick={() => setSelectedAddress(addr)}
+								className={`p-3 border rounded-lg cursor-pointer transition-colors ${
+									(selectedAddress?._id === addr._id || selectedAddress?.id === addr.id)
+										? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+										: "border-slate-200 dark:border-slate-700 hover:border-slate-300"
+								}`}
+							>
+								<div className="flex items-start gap-2">
+									<div className={`w-4 h-4 mt-1 rounded-full border flex items-center justify-center ${
+										(selectedAddress?._id === addr._id || selectedAddress?.id === addr.id)
+											? "border-emerald-500 bg-emerald-500"
+											: "border-slate-300"
+									}`}>
+										{(selectedAddress?._id === addr._id || selectedAddress?.id === addr.id) && (
+											<div className="w-2 h-2 rounded-full bg-white"></div>
+										)}
+									</div>
+									<div>
+										<p className="font-medium text-slate-900 dark:text-white">
+											{addr.fullName || userProfile?.name}
+										</p>
+										<p className="text-sm text-slate-600 dark:text-slate-400">
+											{addr.street}
+										</p>
+										<p className="text-sm text-slate-600 dark:text-slate-400">
+											{addr.city}, {addr.state} - {addr.pincode}
+										</p>
+										<p className="text-sm text-slate-600 dark:text-slate-400">
+											📱 {addr.phone || userProfile?.mobile}
+										</p>
+										{addr.landmark && (
+											<p className="text-xs text-slate-500 dark:text-slate-400">
+												Landmark: {addr.landmark}
+											</p>
+										)}
+										{addr.isDefault && (
+											<span className="inline-block mt-1 px-2 py-0.5 text-xs bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300 rounded">
+												Default
+											</span>
+										)}
+									</div>
+								</div>
+							</div>
+						))}
+					</div>
+				)}
+
+				{showAddressForm ? (
+					<motion.div
+						initial={{ opacity: 0, height: 0 }}
+						animate={{ opacity: 1, height: "auto" }}
+						className="space-y-3"
+					>
+						<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+							<div>
+								<label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+									Full Name *
+								</label>
+								<input
+									type="text"
+									name="fullName"
+									value={newAddress.fullName}
+									onChange={handleAddressChange}
+									className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+									placeholder="Full Name"
+									required
+								/>
+							</div>
+							<div>
+								<label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+									Phone Number *
+								</label>
+								<input
+									type="tel"
+									name="phone"
+									value={newAddress.phone}
+									onChange={handleAddressChange}
+									className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+									placeholder="10-digit mobile number"
+									required
+								/>
+							</div>
+							<div>
+								<label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+									Street Address *
+								</label>
+								<input
+									type="text"
+									name="street"
+									value={newAddress.street}
+									onChange={handleAddressChange}
+									className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+									placeholder="House no., Building, Street"
+									required
+								/>
+							</div>
+							<div>
+								<label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+									City *
+								</label>
+								<input
+									type="text"
+									name="city"
+									value={newAddress.city}
+									onChange={handleAddressChange}
+									className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+									placeholder="City"
+									required
+								/>
+							</div>
+							<div>
+								<label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+									State *
+								</label>
+								<input
+									type="text"
+									name="state"
+									value={newAddress.state}
+									onChange={handleAddressChange}
+									className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+									placeholder="State"
+									required
+								/>
+							</div>
+							<div>
+								<label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+									Pincode *
+								</label>
+								<input
+									type="text"
+									name="pincode"
+									value={newAddress.pincode}
+									onChange={handleAddressChange}
+									className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+									placeholder="6-digit pincode"
+									required
+								/>
+							</div>
+							<div>
+								<label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+									Landmark (Optional)
+								</label>
+								<input
+									type="text"
+									name="landmark"
+									value={newAddress.landmark}
+									onChange={handleAddressChange}
+									className="w-full px-3 py-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-800 text-slate-900 dark:text-white"
+									placeholder="Nearby landmark"
+								/>
+							</div>
+						</div>
+
+						<div className="flex gap-2">
+							<button
+								onClick={saveAddress}
+								disabled={savingAddress}
+								className="px-4 py-2 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+							>
+								{savingAddress ? (
+									<>
+										<div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+										Saving...
+									</>
+								) : "Save Address"}
+							</button>
+							<button
+								onClick={() => setShowAddressForm(false)}
+								className="px-4 py-2 border border-slate-300 text-slate-700 dark:border-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800"
+							>
+								Cancel
+							</button>
+						</div>
+					</motion.div>
+				) : (
+					<button
+						onClick={handleShowAddressForm}
+						className="w-full py-3 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-lg text-slate-600 dark:text-slate-400 hover:border-emerald-400 hover:text-emerald-600 transition-colors flex items-center justify-center gap-2"
+					>
+						<MapPin size={16} />
+						+ Add New Delivery Address
+					</button>
+				)}
+			</div>
+
+			{selectedAddress && (
+				<div className="space-y-3">
+					<h4 className="flex items-center gap-2 font-medium text-slate-900 dark:text-white">
+						<Truck size={18} />
+						Shipping Method
+					</h4>
+					<div className="grid grid-cols-1 md:grid-cols-3 gap-2">
+						{[
+							{ id: "STANDARD", label: "Standard", desc: "4-7 days", icon: Truck },
+							{ id: "EXPRESS", label: "Express", desc: "2-3 days", icon: Package },
+							{ id: "SAME_DAY", label: "Same Day", desc: "Today", icon: Truck },
+						].map((method) => (
+							<button
+								key={method.id}
+								onClick={() => setShippingMethod(method.id)}
+								className={`p-3 border rounded-lg text-left transition-all ${
+									shippingMethod === method.id
+										? "border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20"
+										: "border-slate-200 dark:border-slate-700 hover:border-slate-300"
+								}`}
+							>
+								<div className="flex items-center justify-between">
+									<method.icon className="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+									<span className="font-bold text-slate-900 dark:text-white">
+										₹{shippingCosts[method.id]}
+									</span>
+								</div>
+								<h5 className="font-semibold text-slate-900 dark:text-white mt-1">
+									{method.label}
+								</h5>
+								<p className="text-xs text-slate-600 dark:text-slate-400">
+									{method.desc}
+								</p>
+							</button>
+						))}
+					</div>
+				</div>
+			)}
+
 			<div className="space-y-3 text-sm">
 				<div className="flex justify-between text-slate-600 dark:text-slate-400">
 					<span>Subtotal</span>
@@ -110,18 +584,22 @@ const OrderSummary = () => {
 					</div>
 				)}
 
+				<div className="flex justify-between text-slate-600 dark:text-slate-400">
+					<span>Shipping</span>
+					<span>₹{shippingCost.toFixed(2)}</span>
+				</div>
+
 				<div className="
 					border-t border-dashed border-slate-300 dark:border-slate-700
 					pt-3 flex justify-between text-lg font-bold
 				">
-					<span>Total</span>
+					<span>Total Amount</span>
 					<span className="text-emerald-600">
-						₹{total.toFixed(2)}
+						₹{finalTotal.toFixed(2)}
 					</span>
 				</div>
 			</div>
 
-			{/* TRUST BADGES */}
 			<div className="
 				grid grid-cols-3 gap-3 text-xs text-center
 				text-slate-500 dark:text-slate-400
@@ -140,19 +618,37 @@ const OrderSummary = () => {
 				</div>
 			</div>
 
-			{/* CTA */}
 			<motion.button
 				whileTap={{ scale: 0.98 }}
 				onClick={handleRazorpayPayment}
-				className="
+				disabled={!selectedAddress || cart.length === 0 || processingPayment}
+				className={`
 					w-full py-3 rounded-xl font-semibold text-white
 					bg-linear-to-r from-emerald-500 to-teal-600
-					hover:from-emerald-600 hover:to-teal-700
-					transition shadow-lg
-				"
+					transition shadow-lg flex items-center justify-center gap-2
+					${!selectedAddress || cart.length === 0 || processingPayment
+						? "opacity-50 cursor-not-allowed"
+						: "hover:from-emerald-600 hover:to-teal-700"
+					}
+				`}
 			>
-				Pay Securely
+				{processingPayment ? (
+					<>
+						<div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+						Processing...
+					</>
+				) : !selectedAddress ? (
+					"Select Address to Continue"
+				) : cart.length === 0 ? (
+					"Cart is Empty"
+				) : (
+					<>
+						<CreditCard size={18} />
+						Pay Securely ₹{finalTotal.toFixed(2)}
+					</>
+				)}
 			</motion.button>
+			
 			<div className="text-center text-sm text-slate-500 dark:text-slate-400">
 				or{" "}
 				<Link
@@ -168,8 +664,3 @@ const OrderSummary = () => {
 };
 
 export default OrderSummary;
-
-
-
-
-
