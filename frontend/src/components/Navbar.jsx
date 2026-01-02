@@ -63,16 +63,6 @@ const Navbar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [scrolled, setScrolled] = useState(false);
 
-  /* =======================
-     EFFECTS
-  ======================= */
-  useEffect(() => {
-    const html = document.documentElement;
-    html.classList.remove("light", "dark");
-    html.classList.add(theme);
-    localStorage.setItem("theme", theme);
-  }, [theme]);
-
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
@@ -178,15 +168,7 @@ const Navbar = () => {
             <Search size={20} />
           </button>
 
-          {/* THEME TOGGLE */}
-          <button
-            onClick={toggleTheme}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-            aria-label="Toggle theme"
-          >
-            {theme === "light" ? <Moon size={20} /> : <Sun size={20} />}
-          </button>
-
+          
           {/* NOTIFICATIONS */}
           {user && (
             <button 
